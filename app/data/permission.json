@@ -1,0 +1,97 @@
+{
+  "menus":[{
+    "name": "玩家管理",
+    "icon": "ios-game-controller-b-outline",
+    "path": null,
+    "permissions": [1, 2],
+    "children": [{
+      "name": "玩家查询",
+      "icon": null,
+      "path": "searchPlayer",
+      "permissions": [1, 2]
+    },{
+      "name": "玩家列表",
+      "icon": null,
+      "path": "playerList",
+      "permissions": [1, 2]
+    },{
+      "name": "重置密码",
+      "icon": null,
+      "path": "setPassword",
+      "permissions": [1, 2]
+    },{
+      "name": "冻结列表",
+      "icon": null,
+      "path": "playerArchive",
+      "permissions": [1, 2]
+    }]
+  },{
+    "name": "资产管理",
+    "icon": "usb",
+    "path": null,
+    "permissions": [1, 2],
+    "children": [{
+      "name": "提现审批",
+      "icon": null,
+      "path": "adminAudit",
+      "permissions": [1, 2]
+    },{
+      "name": "玩家充值",
+      "icon": null,
+      "path": "adminPay",
+      "permissions": [1, 2]
+    },{
+      "name": "平台充值",
+      "icon": null,
+      "path": "",
+      "permissions": [1]
+    },{
+      "name": "平台提现",
+      "icon": null,
+      "path": "",
+      "permissions": [1, 2]
+    },{
+      "name": "历史审批",
+      "icon": null,
+      "path": "",
+      "permissions": [1, 2]
+    }]
+  },{
+    "name": "个人管理",
+    "icon": "film-marker",
+    "path": null,
+    "permissions": [11],
+    "children": [{
+      "name": "我的资产",
+      "icon": null,
+      "path": "playerPay",
+      "permissions": [11]
+    },{
+      "name": "个人信息",
+      "icon": null,
+      "path": "personalDetail",
+      "permissions": [11]
+    },{
+        "name": "邀请分享",
+        "icon": null,
+        "path": "inviteToShare",
+        "permissions": [11]
+    }]
+  },{
+    "name": "管理中心",
+    "icon": "ios-game-controller-b-outline",
+    "path": null,
+    "permissions": [1],
+    "children": [{
+      "name": "权限管理",
+      "icon": null,
+      "path": "setPermission",
+      "permissions": [1]
+    },{
+      "name": "账号管理",
+      "icon": null,
+      "path": "",
+      "permissions": [1]
+    }]
+  }]
+}

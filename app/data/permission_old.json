@@ -1,0 +1,140 @@
+{
+  "menus":[{
+    "name": "玩家分析",
+    "icon": "ios-game-controller-b-outline",
+    "path": null,
+    "permissions": [1],
+    "children": [{
+      "name": "玩家總覽",
+      "icon": null,
+      "path": "allPlayers",
+      "permissions": [1]
+    },{
+      "name": "玩家列表",
+      "icon": null,
+      "path": "playerList",
+      "permissions": [1]
+    }]
+  }, {
+    "name": "房卡管理",
+    "icon": "card",
+    "path": null,
+    "permissions": [1,10],
+    "children": [{
+      "name": "價格設置",
+      "icon": null,
+      "path": "priceSet",
+      "permissions": [1]
+    },{
+      "name": "充值與扣除",
+      "icon": null,
+      "path": "recharge",
+      "permissions": [1]
+    },{
+      "name": "玩家充值",
+      "icon": null,
+      "path": "playerPay",
+      "permissions": [1,10]
+    },{
+      "name": "購買房卡",
+      "icon": null,
+      "path": "agentPay",
+      "permissions": [1,10]
+    }]
+  },{
+    "name": "代理管理",
+    "icon": "usb",
+    "path": null,
+    "permissions": [1],
+    "children": [{
+      "name": "代理列表",
+      "icon": null,
+      "path": "agentList",
+      "permissions": [1]
+    },{
+      "name": "代理申請審核",
+      "icon": null,
+      "path": "agentAudit",
+      "permissions": [1]
+    },{
+      "name": "新增代理",
+      "icon": null,
+      "path": "addAgent",
+      "permissions": [1]
+    }]
+  },{
+    "name": "活动管理",
+    "icon": "film-marker",
+    "path": null,
+    "permissions": [1],
+    "children": [{
+      "name": "免費輪盤",
+      "icon": null,
+      "path": "lotteryStatistics",
+      "permissions": [1]
+    }, {
+      "name": "幸運輪盤",
+      "icon": null,
+      "path": "luckyRoulette",
+      "permissions": [1]
+    }]
+  },{
+    "name": "客服中心",
+    "icon": "android-contact",
+    "path": null,
+    "permissions": [1],
+    "children": [{
+      "name": "代理信息查詢",
+      "icon": null,
+      "path": "agentSearch",
+      "permissions": [1]
+    },{
+      "name": "玩家信息查詢",
+      "icon": null,
+      "path": "playerSearch",
+      "permissions": [1]
+    }]
+  },{
+    "name": "設置中心",
+    "icon": "gear-a",
+    "path": null,
+    "permissions": [1],
+    "children": [{
+      "name": "後臺權限設置",
+      "icon": null,
+      "path": "setPermission",
+      "permissions": [1]
+    },{
+      "name": "玩家代理設置",
+      "icon": null,
+      "path": "playerSet",
+      "permissions": [1]
+    },{
+      "name": "玩家封存",
+      "icon": null,
+      "path": "playerArchive",
+      "permissions": [1]
+    },{
+      "name": "房間管理",
+      "icon": null,
+      "path": "houseKeep",
+      "permissions": [1]
+    }]
+  }]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

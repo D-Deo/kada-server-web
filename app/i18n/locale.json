@@ -1,0 +1,192 @@
+{
+  "SMSContent_AgentRegister": {
+    "zh-CN": "【验证码：%code%】您正在注册成为至尊台湾麻将的代理。如非本人操作，请忽略本短信。该验证码将在10分钟后失效。",
+    "zh-TW": "【驗證碼：%code%】您正在註冊成為至尊臺灣麻將的代理。如非本人操作，請忽略本簡訊。該驗證碼將在10分鐘後失效。"
+  },
+
+  "SMSContent_UserBindPhone": {
+    "zh-CN": "【验证码：%code%】您正在至尊台湾麻将APP中绑定手机号。如非本人操作，请忽略本短信。该验证码将在10分钟后失效。",
+    "zh-TW": "【驗證碼：%code%】您正在至尊台灣麻將APP中綁定手機號碼。如非本人操作，請忽略本簡訊。該驗證碼將在10分鐘後失效。"
+  },
+
+  "SMSContent_UserPassword": {
+    "zh-CN": "【验证码：%code%】您正在重设链上娱乐账号的密码，该码10分钟内有效，请勿将验证码告诉任何人。若非您本人操作，请忽略此短信。",
+    "zh-TW": "【驗證碼：%code%】您正在重设链上娱乐账号的密码，该码10分钟内有效，请勿将验证码告诉任何人。若非您本人操作，请忽略此短信。"
+  },
+
+  "SMSContent_UserPoll": {
+    "zh-CN": "【验证码：%code%】您正在申请链上娱乐验证码，该码10分钟内有效，请勿将验证码告诉任何人。若非您本人操作，请忽略此短信。",
+    "zh-TW": "【驗證碼：%code%】您正在申请链上娱乐验证码，该码10分钟内有效，请勿将验证码告诉任何人。若非您本人操作，请忽略此短信。"
+  },
+
+  "SMSContent_UserRegister": {
+    "zh-CN": "【验证码：%code%】您正在注册链上娱乐账号，该码10分钟内有效，请勿将验证码告诉任何人。若非您本人操作，请忽略此短信。",
+    "zh-TW": "【驗證碼：%code%】您正在注册链上娱乐账号，该码10分钟内有效，请勿将验证码告诉任何人。若非您本人操作，请忽略此短信。"
+  },
+
+
+  "ResultCode_SessionError": {
+    "zh-CN": "会话失效，请重新登录",
+    "zh-TW": "會話失效，請重新登录"
+  },
+
+  "ResultCode_ServerBooting": {
+    "zh-CN": "服务器启动中, 请稍后再试",
+    "zh-TW": "服務器啓動中，請稍後再試"
+  },
+
+  "ResultCode_ServerBusy": {
+    "zh-CN": "服务器繁忙, 请稍后再试",
+    "zh-TW": "服務器繁忙，請稍后再試"
+  },
+
+  "ResultCode_ServerClosing": {
+    "zh-CN": "服务器关服重启中, 请耐心等待",
+    "zh-TW": "服務器關服重啓中，請耐心等待"
+  },
+
+  "ResultCode_UserError": {
+    "zh-CN": "玩家错误",
+    "zh-TW": "玩家錯誤"
+  },
+
+  "ResultCode_UserPlaying": {
+    "zh-CN": "玩家正在游戏中",
+    "zh-TW": "玩家正在游戲中"
+  },
+
+  "ResultCode_UserNotPlaying": {
+    "zh-CN": "玩家未加入游戏",
+    "zh-TW": "玩家未加入游戲"
+  },
+
+  "ResultCode_UserRebindPhone": {
+    "zh-CN": "玩家不能重复绑定手机号码",
+    "zh-TW": "玩家不能重複綁定手機號碼"
+  },
+
+  "ResultCode_UserNotEnoughDiamond": {
+    "zh-CN": "钻石不足",
+    "zh-TW": "房卡不足"
+  },
+
+  "ResultCode_UserRoomFull": {
+    "zh-CN": "已达开房上限",
+    "zh-TW": "已達開房上限"
+  },
+
+  "ResultCode_UserGuildFull": {
+    "zh-CN": "已达公会创建上限",
+    "zh-TW": "已達工會創建上限"
+  },
+
+  "ResultCode_UserNotEnoughGold": {
+    "zh-CN": "金币不足",
+    "zh-TW": "金幣不足"
+  },
+
+  "ResultCode_UserNotInGuild": {
+    "zh-CN": "非公会会员",
+    "zh-TW": "非工會會員"
+  },
+
+  "ResultCode_UserUnkown": {
+    "zh-CN": "未知用户",
+    "zh-TW": "未知用戶"
+  },
+
+  "ResultCode_UserChargePlaying": {
+    "zh-CN": "不能对游戏中的玩家扣除房卡",
+    "zh-TW": "不能對游戲中的玩家扣除房卡"
+  },
+
+  "ResultCode_UserBindedPhone": {
+    "zh-CN": "手机号码已绑定其他玩家",
+    "zh-TW": "手機號碼已綁定其他玩家"
+  },
+
+  "ResultCode_UserSuspended": {
+    "zh-CN": "玩家已冻结",
+    "zh-TW": "玩家已凍結"
+  },
+
+  "ResultCode_UserResuspend": {
+    "zh-CN": "玩家已冻结",
+    "zh-TW": "玩家已凍結"
+  },
+
+  "ResultCode_UserReunsuspend": {
+    "zh-CN": "玩家已解除冻结",
+    "zh-TW": "玩家已解除凍結"
+  },
+
+  "ResultCode_RoomError": {
+    "zh-CN": "房间错误",
+    "zh-TW": "房間錯誤"
+  },
+
+  "ResultCode_RoomUnknown": {
+    "zh-CN": "房间不存在",
+    "zh-TW": "房間不存在"
+  },
+
+  "ResultCode_RoomPlaying": {
+    "zh-CN": "房间游戏进行中",
+    "zh-TW": "房間游戲進行中"
+  },
+
+  "ResultCode_RoomFull": {
+    "zh-CN": "房间已满",
+    "zh-TW": "房間已滿"
+  },
+
+  "ResultCode_RoomTurnError": {
+    "zh-CN": "游戏回合错误",
+    "zh-TW": "游戲回合錯誤"
+  },
+
+  "ResultCode_RoomTurnExpired": {
+    "zh-CN": "回合超时",
+    "zh-TW": "回合超時"
+  },
+
+  "ResultCode_MailError": {
+    "zh-CN": "邮件错误",
+    "zh-TW": "郵件錯誤"
+  },
+
+  "ResultCode_GuildError": {
+    "zh-CN": "公会错误",
+    "zh-TW": "工會錯誤"
+  },
+
+  "ResultCode_GuildNameUsed": {
+    "zh-CN": "公会名重复",
+    "zh-TW": "工會名重複"
+  },
+
+  "ResultCode_GuildUnkown": {
+    "zh-CN": "公会不存在",
+    "zh-TW": "工會不存在"
+  },
+
+  "ResultCode_GuildFull": {
+    "zh-CN": "公会已满",
+    "zh-TW": "工會已滿"
+  },
+
+  "ResultCode_GuildChairmanQuit": {
+    "zh-CN": "会长不能退出公会",
+    "zh-TW": "會長不能推出工會"
+  },
+
+  "ResultCode_GuildMemberCreateRoom": {
+    "zh-CN": "公会房间只能由会长代开",
+    "zh-TW": "工會房間衹能由會長代開"
+  },
+
+  "ResultCode_GuildRoomFull": {
+    "zh-CN": "已达开房上限",
+    "zh-TW": "已達開房上限"
+  }
+}

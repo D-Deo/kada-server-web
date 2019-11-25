@@ -1,0 +1,30 @@
+{
+  "free": [
+    {"itemId":101,"count":1,"weight":3},
+    {"itemId":3,"count":2,"weight":15},
+    {"itemId":3,"count":15,"weight":0},
+    {"itemId":102,"count":1,"weight":1},
+    {"itemId":3,"count":0,"weight":2220},
+    {"itemId":3,"count":3,"weight":5},
+    {"itemId":103,"count":1,"weight":3},
+    {"itemId":3,"count":5,"weight":2},
+    {"itemId":3,"count":8,"weight":1},
+    {"itemId":104,"count":1,"weight":0},
+    {"itemId":3,"count":88,"weight":0},
+    {"itemId":3,"count":1,"weight":250}
+  ],
+  "diamond": [
+    {"itemId":2, "count":1, "weight":5500},
+    {"itemId":2, "count":6, "weight":600},
+    {"itemId":2, "count":88, "weight":0},
+    {"itemId":2,"count":2, "weight":5000},
+    {"itemId":2, "count":9, "weight":200},
+    {"itemId":104, "count":1, "weight":0},
+    {"itemId":2, "count":4, "weight":3500},
+    {"itemId":2, "count":15, "weight":15},
+    {"itemId":2, "count":5, "weight":1500},
+    {"itemId":2, "count":188, "weight":0},
+    {"itemId":2, "count":12, "weight":75},
+    {"itemId":2, "count":30, "weight":1}
+  ]
+}

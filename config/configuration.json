@@ -1,0 +1,118 @@
+{
+    "development": {
+        "port": 30099,
+        "sslPort": 31099,
+        "googleAuth": false
+    },
+    "whiteIp": {
+        "*": []
+    },
+    "logger": {
+        "appenders": {
+            "console": {
+                "type": "stdout"
+            },
+            "admin": {
+                "type": "file",
+                "filename": "logs/admin.log",
+                "maxLogSize": 10485760,
+                "backups": 5,
+                "keepFileExt": true
+            },
+            "user": {
+                "type": "dateFile",
+                "filename": "logs/user.log",
+                "maxLogSize": 10485760,
+                "backups": 5,
+                "keepFileExt": true
+            },
+            "bindAgent": {
+                "type": "dateFile",
+                "filename": "logs/bindAgent.log",
+                "maxLogSize": 10485760,
+                "backups": 5,
+                "keepFileExt": true
+            },
+            "common": {
+                "type": "dateFile",
+                "filename": "logs/common.log",
+                "maxLogSize": 10485760,
+                "backups": 5,
+                "keepFileExt": true
+            }
+        },
+        "categories": {
+            "default": {
+                "appenders": [
+                    "console",
+                    "admin",
+                    "user",
+                    "bindAgent",
+                    "common"
+                ],
+                "level": "INFO"
+            }
+        }
+    },
+    "server": {
+        "host": "127.0.0.1",
+        "port": 30089
+    },
+    "db": {
+        "host": "127.0.0.1",
+        "port": 3306,
+        "user": "root",
+        "password": "123456",
+        "database": "vpserver",
+        "pool": 10
+    },
+    "redis": {
+        "host": "127.0.0.1",
+        "port": 6379,
+        "auth": 123456
+    },
+    "payapi": {
+        "host": "127.0.0.1",
+        "port": 7180,
+        "name":""
+    },
+    "payinfodb": {
+        "host": "127.0.0.1",
+        "port": 3306,
+        "user": "root",
+        "password": "123456",
+        "database": "pay",
+        "pool": 10
+    },
+    "notifyWebSocket": {
+        "host": "127.0.0.1:8000"
+    },
+    "operate_path_filter": [
+        "/admin/user/details",
+        "/finace/item/records",
+        "/settings/level",
+        "/admin/user/game/details",
+        "/user/login/records",
+        "/admin/user/suspend/details",
+        "/settings/pay/kinds",
+        "/settings/pay/channel/kinds",
+        "/finace/pay/records",
+        "/finace/withdraw/records",
+        "/admin/agent/details",
+        "/admin/rebate/record",
+        "/admin/room/params/list",
+        "/admin/mail/list",
+        "/user/message/list",
+        "/admin/jackpot/details",
+        "/settings/pay/channels",
+        "/settings/pay/channels/union",
+        "/settings/pay/channels/wx",
+        "/settings/settings",
+        "/admin/accounts",
+        "/admin/role",
+        "/admin/operate/records",
+        "/admin/permission",
+        "/settings/level",
+        "/settings/pay/kinds"
+    ]
+}
