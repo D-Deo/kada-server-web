@@ -221,7 +221,8 @@ router.route('/pay/order').post((req, res) => {
                     server.get(channel.api, {
                         orderId: id,
                         money,
-                        type: type == 1 ? 1 : 0
+                        type: type == 1 ? 1 : 0,
+                        channel: channel.pay
                     }, (ret) => {
                         if (ret.code != 200 || !ret.success) {
                             logger.error(ret);
