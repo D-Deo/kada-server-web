@@ -14,8 +14,7 @@ permission.session = () => {
 
         let api = data.api[url.parse(req.originalUrl).pathname];
         if (api && !api.session) {
-            next();
-            return;
+            return next();
         }
 
         let agent = agentManager.getAgentBySession(req.sessionID);
@@ -26,15 +25,13 @@ permission.session = () => {
             }
 
             req.agent = agent;
-            next();
-            return;
+            return next();
         }
 
-        let user = userManager.getUserBySession(req.sessionID);
-        if (user) {
-            req.user = user;
-            next();
-            return;
+        let admin = userManager.getUserBySession(req.sessionID);
+        if (admin) {
+            req.admin = admin;
+            return next();
         }
 
         utils.responseSessionError(res);

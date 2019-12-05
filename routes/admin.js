@@ -44,22 +44,25 @@ let router = express.Router();
  * }]
  */
 router.get('/accounts', (req, res) => {
-    let user = userManager.getUserBySession(req.sessionID);
-    if (!user) {
+    // let admin = userManager.getUserBySession(req.sessionID);
+    let admin = req.admin;
+    if (!admin) {
         utils.response(res, { code: 402, msg: '登录失效！' });
         return;
     }
 
+    let { status = -1, roleId = 0, search = null, create_time = null, start = null, end = null, column = 'role', order = 'ASC' } = req.query;
+
     let pindex = parseInt(req.query.pindex);
     let psize = parseInt(req.query.psize);
-    let { status = -1, roleId = 0, search = null, create_time = null, start = null, end = null, column = 'role', order = 'ASC' } = req.query;
+
     if (!utils.isNumber(pindex, 0) ||
         !utils.isNumber(psize, 0)) {
         utils.responseError(res);
         return;
     }
 
-    if (user.role == 1) {
+    if (admin.isSuperAdmin()) {
         db.call('proc_admin_details_admin', [status, roleId, search, start, end, pindex, psize, column, order], true, (err, result) => {
             if (err) {
                 utils.responseError(res);
@@ -154,10 +157,9 @@ router.post('/accounts/add', (req, res) => {
 
 
 /**
- * @api {post} admin/accounts/permission 修改帐号类型
- * @class admin
- * @param {number} id 帐号ID
- * @param {string} permission 帐号类型
+ * @api {post} admin/accounts/permission 修改玩家类型
+ * @param {number} id 玩家ID
+ * @param {string} permission 玩家类型
  */
 router.post('/accounts/permission', (req, res) => {
     let { id, permission, type } = req.body;
@@ -168,142 +170,69 @@ router.post('/accounts/permission', (req, res) => {
         return;
     }
 
-    let user = userManager.getUserBySession(req.sessionID);
-    if (!user) {
+    let admin = userManager.getUserBySession(req.sessionID);
+    if (!admin) {
         utils.response(res, { code: 402, msg: '登录失效！' });
         return;
     }
-    let operateid = user.attrs.id;
-    let operaterole = user.attrs.role;
-    userManager.loadUserById(id).then((user) => {
-        if (!type)
-            type = user.attrs['type'];
 
-        if (operaterole != 1 && permission == 1) {
-            utils.response(res, { code: 200, msg: '管理员不能执行提升超级管理员操作' });
-            return;
-        }
+    let operateid = admin.attrs.id;
+    let operaterole = admin.attrs.role;
 
-        let inviteCode = null;
+    if (operaterole != 1 && permission == 1) {
+        utils.response(res, { code: 200, msg: '管理员不能执行提升超级管理员操作' });
+        return;
+    }
+
+    let params = { role: permission };
+    if (type) {
+        params.type = type;
+    }
+
+    if (permission == cons.Role.AGENT()) {
+        params.inviteCode = utils.md5(admin.getId() + "" + admin.getAttr('timestamp'));
+    }
+
+    model.User.update(params, { where: { id } }).then(result => {
+        console.log(result);
         if (permission == cons.Role.AGENT()) {
-            inviteCode = utils.md5(user.getInviteCode());
+            let params = {};
+            params.userId = operateid;
+            params.module = '玩家列表';
+            params.desc = operateid + '提升' + id + '成为代理成功';
+            params.opname = '提升代理';
+            adminlog.external(req, params);
+            params.ext1 = id;
+            params.ext2 = null;
+            params.ext3 = null;
+            params.columns = [];
+            adminlog.logadmin(params);
+        } else if (permission == cons.Role.TEST()) {
+            let params = {};
+            params.userId = operateid;
+            params.module = '玩家列表';
+            params.desc = operateid + '转换' + id + '成为测试,成功';
+            params.opname = '转为测试';
+            adminlog.external(req, params);
+            params.ext1 = id;
+            params.ext2 = null;
+            params.ext3 = null;
+            params.columns = [];
+            adminlog.logadmin(params);
         }
 
-        sao.user.changeRole(id, permission, type, inviteCode, (result) => {
-            if (result.code != 10009 && (result.code != 200 && result.msg != "ok")) {
-                return utils.response(res, result);
-            }
+        let user = userManager.getUserById(id);
+        if (user) {
+            user.setAttr('role', permission);
+            user.setAttr('inviteCode', params.inviteCode);
+        }
 
-            if (result.code == 10009) {
-                model.User.findById(id).then((user) => {
-                    if (user) {
-                        user.update({
-                            type,
-                            role: permission,
-                            inviteCode
-                        }).success(result => {
-                            console.log(result);
-                            if (permission == cons.Role.AGENT()) {
-                                let params = {};
-                                params.userId = operateid;
-                                params.module = '玩家列表';
-                                params.desc = operateid + '提升' + id + '成为代理成功';
-                                params.opname = '提升代理';
-                                adminlog.external(req, params);
-                                params.ext1 = id;
-                                params.ext2 = null;
-                                params.ext3 = null;
-                                params.columns = [];
-                                adminlog.logadmin(params);
-                            } else if (permission == cons.Role.TEST()) {
-                                let params = {};
-                                params.userId = operateid;
-                                params.module = '玩家列表';
-                                params.desc = operateid + '转换' + id + '成为测试,成功';
-                                params.opname = '转为测试';
-                                adminlog.external(req, params);
-                                params.ext1 = id;
-                                params.ext2 = null;
-                                params.ext3 = null;
-                                params.columns = [];
-                                adminlog.logadmin(params);
-                            }
-                        })
-                            .error(err => console.log(err));
-                    }
-                }).catch(e => {
-                    console.log(e);
-                });
-            }
-            else {
-                user.setAttr('role', permission);
-                user.setAttr('inviteCode', inviteCode);
-                if (permission == cons.Role.AGENT()) {
-                    let params = {};
-                    params.userId = operateid;
-                    params.module = '玩家列表';
-                    params.desc = operateid + '提升' + id + '成为代理成功';
-                    params.opname = '提升代理';
-                    adminlog.external(req, params);
-                    params.ext1 = id;
-                    params.ext2 = null;
-                    params.ext3 = null;
-                    params.columns = [];
-                    adminlog.logadmin(params);
-                } else if (permission == cons.Role.TEST()) {
-                    let params = {};
-                    params.userId = operateid;
-                    params.module = '玩家列表';
-                    params.desc = operateid + '转换' + id + '成为测试,成功';
-                    params.opname = '转为测试';
-                    adminlog.external(req, params);
-                    params.ext1 = id;
-                    params.ext2 = null;
-                    params.ext3 = null;
-                    params.columns = [];
-                    adminlog.logadmin(params);
-                }
-            }
-
-            utils.responseOK(res);
-        });
-
+        sao.user.changeRole(id, permission, type, params.inviteCode);
+        utils.responseOK(res);
     }).catch(err => {
-        console.error(err);
+        logger.error(err);
+        utils.responseBDError(res);
     });
-
-    // db.update("user", { id: id }, { role: permission }, (err, result) => {
-    //     userManager.loadUserById(id).then((user) => {
-    //         user.setAttr('role', permission);
-
-    //         if (permission == cons.Role.AGENT()) {
-    //             let params = {};
-    //             params.userId = operateid;
-    //             params.module = '玩家列表';
-    //             params.desc = operateid + '提升' + id + '成为代理成功';
-    //             params.opname = '提升代理';
-    //             adminlog.external(req, params);
-    //             params.ext1 = id;
-    //             params.ext2 = caption;
-    //             params.ext3 = null;
-    //             params.columns = [];
-    //             adminlog.logadmin(params);
-    //         } else if (permission == cons.Role.TEST()) {
-    //             let params = {};
-    //             params.userId = operateid;
-    //             params.module = '玩家列表';
-    //             params.desc = operateid + '转换' + id + '成为测试,成功';
-    //             params.opname = '转为测试';
-    //             adminlog.external(req, params);
-    //             params.ext1 = id;
-    //             params.ext2 = caption;
-    //             params.ext3 = null;
-    //             params.columns = [];
-    //             adminlog.logadmin(params);
-    //         }
-    //     });
-    //     utils.responseOK(res);
-    // });
 });
 
 /**
@@ -628,7 +557,11 @@ router.get('/role', (req, res) => {
         return;
     }
 
-    db.call('proc_admin_role_details', [pindex, psize], true, (err, result) => {
+    let sql = 'proc_admin_role_details';
+    if (req.admin && req.admin.isSuperAdmin()) {
+        sql += '_admin';
+    }
+    db.call(sql, [pindex, psize], true, (err, result) => {
         if (err) {
             utils.responseError(res);
             return;
@@ -871,18 +804,15 @@ router.post('/charge/agent', (req, res) => {
  *  "bindDiamond": 10, 修改后的绑定钻石数
  * }
  */
-router.post('/charge/user', (req, res) => {
-    let user = req.user;
-    let { id, account, itemId, count, reason, memo } = req.body;
-
-    if (!user) {
+router.post('/charge/user', async (req, res) => {
+    if (!req.admin) {
         utils.response(res, { code: 402, msg: '登录失效！' });
         return;
     }
 
-    let operateid = user.attrs.id;
-    id = parseInt(id) || null;
+    let { id, account, itemId, count, reason, memo } = req.body;
 
+    id = parseInt(id) || null;
     if ((id && !utils.isId(id)) ||
         (account && !utils.isString(account, 6)) ||
         !utils.isId(itemId) ||
@@ -892,39 +822,36 @@ router.post('/charge/user', (req, res) => {
         return;
     }
 
-    (async () => {
-        let user = null;
-        if (id) {
-            user = await userManager.loadUserById(id);
-        }
+    let user = null;
+    if (id) {
+        user = await userManager.loadUserById(id);
+    }
 
-        if (!user && account) {
-            user = await userManager.loadUserByAccount(account);
-        }
+    if (!user && account) {
+        user = await userManager.loadUserByAccount(account);
+    }
 
-        if (!user) {
-            return utils.response(res, cons.ResultCode.UNKNOWN_USER());
-        }
+    if (!user) {
+        return utils.response(res, cons.ResultCode.UNKNOWN_USER());
+    }
 
-        let params = {};
-        params.userId = operateid;
-        params.module = '玩家充值';
-        params.desc = '给玩家' + id + (count < 0 ? '扣钱:' : '加钱:') + count + ',' + memo;
-        params.opname = '后台' + (count < 0 ? '扣钱' : '加钱');
-        adminlog.external(req, params);
-        params.ext1 = count;
-        params.ext2 = id;
-        params.ext3 = itemId;
-        params.columns = [];
-        adminlog.logadmin(params);
+    let params = {};
+    params.userId = req.admin.getId();
+    params.module = '玩家充值';
+    params.desc = '给玩家' + id + (count < 0 ? '扣钱:' : '加钱:') + count + ',' + memo;
+    params.opname = '后台' + (count < 0 ? '扣钱' : '加钱');
+    adminlog.external(req, params);
+    params.ext1 = count;
+    params.ext2 = id;
+    params.ext3 = itemId;
+    params.columns = [];
+    adminlog.logadmin(params);
 
-        let p = saop.item.changeItem(user.getId(), itemId, count, {
-            from: operateid + "",
-            reason, memo
-        });
-        utils.responseProm(res, p);
-    })();
-
+    let p = saop.item.changeItem(user.getId(), itemId, count, {
+        from: req.admin.getId() + "",
+        reason, memo
+    });
+    utils.responseProm(res, p);
 
     // if (!/^\d+$/img.test(id)) {
     //     db.find("user", { account: id }, (err, data) => {
@@ -1520,7 +1447,7 @@ router.post('/user/details', (req, res) => {
             let total = result[1][0].total;
             // utils.responseOK(res, { data, total });
 
-            let count = result[1][0].money;
+            let count = result[1][0].wallet;
             let tzze = result[1][0].cost;
             let zjze = result[1][0].score;
             let csze = result[1][0].fee;
@@ -1675,7 +1602,7 @@ router.post('/user/suspend/commit', (req, res) => {
         }
 
         db.insert('user_suspend_record', {
-            agentId: req.user ? req.user.getId() : 0,
+            agentId: req.admin ? req.admin.getId() : 0,
             desp,
             type: commit,
             userId: userId,
@@ -1744,90 +1671,81 @@ router.post('/user/suspend/details', (req, res) => {
  * @param {number} userId 玩家id
  * @param {string} password 新密码
  */
-router.post('/user/password/commit', (req, res) => {
+router.post('/user/password/commit', async (req, res) => {
+    let admin = userManager.getUserBySession(req.sessionID);
+    if (!admin) {
+        return utils.response(res, { code: 402, msg: '登录失效！' });
+    }
+
     let userId = req.body.userId;
     let password = req.body.password;
     let password2 = req.body.password2;
 
-    if (!utils.isId(userId) || (!utils.isString(password, 1, 30) && !utils.isString(password2, 1, 30))) {
-        utils.response(res, { code: 400, msg: '登录密码和银行密码不能同时为空' });
+    if ((userId && !utils.isId(userId))
+        || (password && !utils.isString(password, 1, 32))
+        || (password2 && !utils.isString(password2, 1, 32))) {
+        return utils.responseError(res);
+    }
+
+    if (!password && !password2) {
+        return utils.response(res, { code: 400, msg: '登录密码和银行密码不能同时为空' });
+    }
+
+    if (!userId) {
+        userId = admin.getId();
+    }
+
+    let user = await userManager.loadUserById(userId);
+    if (!user) {
+        utils.response(res, { code: 402, msg: '未知用户' });
         return;
     }
 
-    let admin = userManager.getUserBySession(req.sessionID);
-    if (!admin) {
-        utils.response(res, { code: 402, msg: '登录失效！' });
-        return;
+    if (password) {
+        user.setAttr('password', utility.md5(password).toUpperCase());
     }
 
-    (async () => {
-        let user = await userManager.loadUserById(userId);
-        if (!user) {
-            utils.response(res, { code: 402, msg: '未知用户' });
+    if (password2) {
+        user.setAttr('password2', utility.md5(password2).toUpperCase());
+    }
+
+    sao.user.resetpwd(user.getAttr('account'), password, password2, (result) => {
+        if (!utils.crOK(result)) {
+            utils.response(res, result);
             return;
         }
 
-        if (password) {
-            user.setAttr('password', utility.md5(password).toUpperCase());
-        }
-        if (password2) {
-            user.setAttr('password2', utility.md5(password2).toUpperCase());
-        }
+        // if (password) {
+        //     pword = utility.md5(password).toUpperCase();
+        //     db.update('user', { id: userId }, { password: pword }, (err) => {
+        //         if (err) {
+        //             console.error(err);
+        //         }
+        //     });
+        // }
 
-        sao.user.resetpwd(user.getAttr('account'), password, password2, (result) => {
-            if (!utils.crOK(result)) {
-                utils.response(res, result);
-                return;
-            }
+        // if (password2) {
+        //     pword2 = utility.md5(password2).toUpperCase();
+        //     db.update('user', { id: userId }, { password2: pword2 }, (err) => {
+        //         if (err) {
+        //             console.error(err);
+        //         }
+        //     });
+        // }
 
-            // if (password) {
-            //     pword = utility.md5(password).toUpperCase();
-            //     db.update('user', { id: userId }, { password: pword }, (err) => {
-            //         if (err) {
-            //             console.error(err);
-            //         }
-            //     });
-            // }
-
-            // if (password2) {
-            //     pword2 = utility.md5(password2).toUpperCase();
-            //     db.update('user', { id: userId }, { password2: pword2 }, (err) => {
-            //         if (err) {
-            //             console.error(err);
-            //         }
-            //     });
-            // }
-
-            let params = {};
-            params.userId = admin.getId();
-            params.module = '重置密码';
-            params.desc = admin.getId() + '重置玩家' + userId + '的密码,成功';
-            params.opname = '重置密码';
-            adminlog.external(req, params);
-            params.ext1 = userId;
-            params.ext2 = password;
-            params.ext3 = password2;
-            params.columns = [];
-            adminlog.logadmin(params);
-            utils.responseOK(res, result);
-        });
-    })();
-
-
-
-    // db.find('user', { id: userId }, (err, data) => {
-    //     if (err) {
-    //         console.error(err);
-    //         return utils.responseBDError(res);
-    //     }
-
-    //     if (!data) {
-    //         utils.response(res, cons.ResultCode.UNKNOWN_USER());
-    //         return;
-    //     }
-
-
-    // });
+        let params = {};
+        params.userId = admin.getId();
+        params.module = '重置密码';
+        params.desc = admin.getId() + '重置玩家' + userId + '的密码,成功';
+        params.opname = '重置密码';
+        adminlog.external(req, params);
+        params.ext1 = userId;
+        params.ext2 = password;
+        params.ext3 = password2;
+        params.columns = [];
+        adminlog.logadmin(params);
+        utils.responseOK(res, result);
+    });
 });
 
 /**
@@ -2581,7 +2499,6 @@ router.route('/mail/update').post((req, res) => {
  *  }]
  */
 router.get('/mail/list', (req, res) => {
-    //let senderId = req.user.isAdmin() ? null : req.user.getId();
     let senderId = null;
     let pindex = parseInt(req.query.pindex);
     let psize = parseInt(req.query.psize);

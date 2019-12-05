@@ -49,6 +49,10 @@ class User {
         return this.getId() + "" + this.getAttr('timestamp')
     }
 
+    isSuperAdmin() {
+        return this.getAttr('role') === constants.Role.SUPER_ADMIN();
+    }
+
     isAdmin() {
         return this.getAttr('type') === constants.Role.ADMIN();
     }

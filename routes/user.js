@@ -378,7 +378,7 @@ router.post('/login/records', (req, res) => {
  * }
  */
 router.post('/login/info', (req, res) => {
-    utils.responseOK(res, req.user.toJson_Login());
+    utils.responseOK(res, req.admin.toJson_Login());
 });
 
 
@@ -1120,7 +1120,6 @@ router.route('/message/update').post((req, res) => {
  *  }]
  */
 router.get('/message/list', (req, res) => {
-    //let userId = req.user.isAdmin() ? null : req.user.getId();
     let userId = null;
     let pindex = parseInt(req.query.pindex);
     let psize = parseInt(req.query.psize);

@@ -24,18 +24,19 @@ constants.USER_BIND_AGENT_REWARD = _.constant(5);
 /**
  * @api {enum} role 玩家身份
  * @apiGroup Constants
- * @apiParam (enum) 1 管理员
- * @apiParam (enum) 2 客服
+ * @apiParam (enum) 1 超级管理员
+ * @apiParam (enum) 2 管理员
  * @apiParam (enum) 3 代理
  * @apiParam (enum) 4 运营
  * @apiParam (enum) 11 玩家
  * @apiParam (enum) 12 测试
+ * @apiParam (enum) 1000 机器人
  */
 constants.Role = {
-    ADMIN: _.constant(1),
-    CUSTOM: _.constant(2),
+    SUPER_ADMIN: _.constant(1),
+    ADMIN: _.constant(2),
     AGENT: _.constant(3),
-    OPERATION: _.constant(4),
+    BUSINESS: _.constant(4),
     USER: _.constant(11),
     TEST: _.constant(12),
     ROBOT: _.constant(1000),
