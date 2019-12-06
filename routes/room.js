@@ -3,6 +3,7 @@ const express = require('express');
 const server = require('../app/server');
 const utils = require('../app/utils/utils');
 const _ = require('underscore');
+const zlib = require('zlib');
 
 
 let router = express.Router();
@@ -99,18 +100,67 @@ router.get('/records', (req, res) => {
 
     db.call('proc_user_historys', [game, userId, limit], true, (err, result) => {
         let data = _.first(result);
-        _.each(data, (d) => {
-            d.balance = JSON.parse(d.balance);
-            // d.balance = _.map(, (b) => {
-            // return b;
-            // return _.pick(b, ['agentId', 'agentNick', 'desp', 'head', 'id', 'nick', 'score']);
-            // });
-            d.attrs = JSON.parse(d.attrs);
-            // d.attrs = _.map(JSON.parse(d.attrs), (b) => {
-            //     return b;
-            // });
-        });
-        utils.responseOK(res, data);
+        let all = data.length;
+		
+		let retFunc = (res, data) => {
+			_.each(data, (d) => {
+                d.balance = JSON.parse(d.balance);
+				d.attrs = JSON.parse(d.attrs);
+			});
+			return utils.responseOK(res, data);
+		};
+		
+        for (let i = 0; i < data.length; i++) {
+            let d = data[i];
+            // d.attrs = JSON.parse(d.attrs);
+            if (d.balance) {
+                // let buffer = Buffer.from(d.balance, 'base64').toString();
+                let buffer = new Buffer(d.balance, 'base64');
+				console.log(buffer);
+                zlib.unzip(buffer, (err, balance) => {
+                    if (err) {
+						console.error(err);
+						all -= 1;
+						if (all <= 0) {
+							return retFunc(res, data);
+							// return utils.responseOK(res, data);
+						}
+                        return;
+                    }
+                    d.balance = balance.toString();
+                    all -= 1;
+                    if (all <= 0) {
+						return retFunc(res, data);
+                        // return utils.responseOK(res, data);
+                    }
+                });
+                continue;
+            }
+            all -= 1;
+            if (all <= 0) {
+				return retFunc(res, data);
+                // return utils.responseOK(res, data);
+            }
+        }
+        // _.each(data, (d) => {
+        //     let buffer = Buffer.from(d.balance, 'base64').toString();
+        //     zlib.unzip(buffer, (err, balance) => {
+        //         if (err) {
+
+        //         }
+        //     });
+
+        //     d.balance = JSON.parse(d.balance);
+        //     // d.balance = _.map(, (b) => {
+        //     // return b;
+        //     // return _.pick(b, ['agentId', 'agentNick', 'desp', 'head', 'id', 'nick', 'score']);
+        //     // });
+        //     d.attrs = JSON.parse(d.attrs);
+        //     // d.attrs = _.map(JSON.parse(d.attrs), (b) => {
+        //     //     return b;
+        //     // });
+        // });
+        // utils.responseOK(res, data);
     });
 });
 
