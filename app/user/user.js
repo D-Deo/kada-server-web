@@ -57,6 +57,10 @@ class User {
         return this.getAttr('type') === constants.Role.ADMIN();
     }
 
+    isAgent() {
+        return this.getAttr('role') === constants.Role.ADMIN();
+    }
+
     isSuspended() {
         return this.getAttr('state') === constants.UserState.SUSPENDED();
     }

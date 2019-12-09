@@ -17,16 +17,16 @@ permission.session = () => {
             return next();
         }
 
-        let agent = agentManager.getAgentBySession(req.sessionID);
-        if (agent) {
-            if (api.type && (agent.getAttr('type') !== api.type)) {
-                utils.responseError(res);
-                return;
-            }
+        // let agent = agentManager.getAgentBySession(req.sessionID);
+        // if (agent) {
+        //     if (api.type && (agent.getAttr('type') !== api.type)) {
+        //         utils.responseError(res);
+        //         return;
+        //     }
 
-            req.agent = agent;
-            return next();
-        }
+        //     req.agent = agent;
+        //     return next();
+        // }
 
         let admin = userManager.getUserBySession(req.sessionID);
         if (admin) {

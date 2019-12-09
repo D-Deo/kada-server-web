@@ -234,6 +234,13 @@ router.get('/find', (req, res) => {
         return utils.responseError(res);
     }
 
+    if (req.admin && req.admin.isAgent()) {
+        let user = model.User.findById(id);
+        if (user.agentId != req.admin.getId()) { 
+            return utils.responseError(res, '没有找到对应的玩家');
+        }
+    }
+
     db.call('proc_user_find', [id, account], true, (err, result) => {
         if (err) {
             utils.responseError(res);
