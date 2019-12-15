@@ -2,13 +2,16 @@ const Redis = require('redis');
 const conf = require(`../../config/${process.env.conf}.json`);
 const { promisify } = require('util');
 
-let redis = module.exports = {};
-
-redis.client = Redis.createClient({
+let opts = {
     host: conf.redis.host || '127.0.0.1',
     port: conf.redis.port || 6379,
-    password: conf.redis.auth || null
-});
+}
+if (conf.redis.auth) {
+    opts.password = conf.redis.auth;
+}
+
+let redis = module.exports = {};
+redis.client = Redis.createClient(opts);
 
 redis.async = {};
 redis.async.get = promisify(redis.client.get).bind(redis.client);
