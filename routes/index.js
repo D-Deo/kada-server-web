@@ -6,7 +6,7 @@ const utils = require('../app/utils/utils');
 const db = require('../app/db');
 const cons = require('../app/common/constants');
 const logger = require('log4js').getLogger('index');
-const ccap = require('ccap');
+// const ccap = require('ccap');
 const captchapng = require('captchapng');
 const Geetest = require('gt3-sdk');
 const qr = require('qr-image');
@@ -89,26 +89,26 @@ router.get('/vercode/action', (req, res) => {
 /**
  * @api /vercode 获取验证码图片
  */
-router.get('/vercode', function (req, res) {
-    res.set("Access-Control-Allow-Origin", "*");
+// router.get('/vercode', function (req, res) {
+//     res.set("Access-Control-Allow-Origin", "*");
 
-    let v = req.query.v;
-    if (!utils.isString(v, 1)) {
-        res.writeHead(404);
-        res.end('');
-        return;
-    }
+//     let v = req.query.v;
+//     if (!utils.isString(v, 1)) {
+//         res.writeHead(404);
+//         res.end('');
+//         return;
+//     }
 
-    let captcha = ccap();
-    let code = captcha.get();
-    let txt = code[0];      //验证码文本
-    let buf = code[1];      //验证码图形
-    utils.addVercode(v, txt);
-    res.writeHead(200, {
-        'Content-Type': 'image/bmp'
-    })
-    res.end(buf);
-});
+//     let captcha = ccap();
+//     let code = captcha.get();
+//     let txt = code[0];      //验证码文本
+//     let buf = code[1];      //验证码图形
+//     utils.addVercode(v, txt);
+//     res.writeHead(200, {
+//         'Content-Type': 'image/bmp'
+//     })
+//     res.end(buf);
+// });
 
 /**
  * @api /vercode 获取验证码图片
