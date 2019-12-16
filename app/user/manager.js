@@ -46,7 +46,7 @@ class Manager {
     }
 
     createUser(attrs) {
-        let user = new User(attrs);
+        let user = User.create(attrs);
         this.addUser(user);
         return user;
     }

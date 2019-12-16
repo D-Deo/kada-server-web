@@ -193,7 +193,7 @@ constants.ResultCode = {
     BINDED_INVITE_CODE: _.constant({ code: 10010, msg: "玩家不能重复绑定邀请码" }),
     BINDED_USER_AGENT: _.constant({ code: 10010, msg: "玩家不能重复绑定代理" }),
     BINDED_USER_PHONE: _.constant({ code: 10011, msg: "玩家不能重复绑定手机号码" }),
-    NOT_ENOUGH_DIAMOND: _.constant({ code: 10012, msg: "房卡不足" }),
+    NOT_ENOUGH_DIAMOND: _.constant({ code: 10012, msg: "剩余钻石不足" }),
     UNBIND_USER: _.constant({ code: 10013, msg: "未绑定用户" }),
     USER_SUSPENDED: _.constant({ code: 10014, msg: "账号已冻结" }),
     SAMEIP_USERS_OVERED: _.constant({ code: 10015, msg: "相同IP下用户数超限额" }),

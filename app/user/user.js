@@ -58,7 +58,7 @@ class User {
     }
 
     isAgent() {
-        return this.getAttr('role') === constants.Role.ADMIN();
+        return this.getAttr('role') === constants.Role.AGENT();
     }
 
     isSuspended() {
@@ -73,6 +73,7 @@ class User {
         json.token = json.session;
         json.role = this.getAttr('role');
         json.type = this.getAttr('type');
+        json.diamond = this.diamond || 0;
         return json;
     }
 }

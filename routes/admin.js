@@ -818,8 +818,7 @@ router.post('/charge/user', async (req, res) => {
         !utils.isId(itemId) ||
         !utils.isNumber(reason) ||
         !utils.isNumber(count)) {
-        utils.responseError(res);
-        return;
+        return utils.responseError(res);
     }
 
     let user = null;
@@ -835,6 +834,25 @@ router.post('/charge/user', async (req, res) => {
         return utils.response(res, cons.ResultCode.UNKNOWN_USER());
     }
 
+    if (req.admin.isAgent()) {
+        if (user.getAttr('agentId') != req.admin.getId()) {
+            return utils.response(res, cons.ResultCode.UNKNOWN_USER());
+        }
+
+        let item = await model.Item.findOne({ where: { userId: req.admin.getId(), itemId } });
+        if (!item || item.count < count) {
+            return utils.response(res, cons.ResultCode.NOT_ENOUGH_DIAMOND());
+        }
+
+        let ret = await saop.item.changeItem2(req.admin.getId(), itemId, -count, { from: req.admin.getId(), reason, memo });
+        if (ret.code != cons.ResultCode.OK().code) {
+            return utils.responseError(res, ret.msg);
+        }
+    }
+
+    let p = saop.item.changeItem(user.getId(), itemId, count, { from: req.admin.getId(), reason, memo });
+    utils.responseProm(res, p);
+
     let params = {};
     params.userId = req.admin.getId();
     params.module = '玩家充值';
@@ -846,40 +864,6 @@ router.post('/charge/user', async (req, res) => {
     params.ext3 = itemId;
     params.columns = [];
     adminlog.logadmin(params);
-
-    let p = saop.item.changeItem(user.getId(), itemId, count, {
-        from: req.admin.getId() + "",
-        reason, memo
-    });
-    utils.responseProm(res, p);
-
-    // if (!/^\d+$/img.test(id)) {
-    //     db.find("user", { account: id }, (err, data) => {
-    //         if (err) {
-    //             utils.responseError(res);
-    //             return;
-    //         }
-
-    //         if (!data) {
-    //             utils.response(res, cons.ResultCode.UNKNOWN_USER());
-    //             return;
-    //         }
-
-    //         let uid = data.id;
-    //         let p = saop.item.changeItem(uid, itemId, count, {
-    //             from: uid + "",
-    //             reason, memo
-    //         });
-    //         utils.responseProm(res, p);
-    //     })
-    // } else {
-    //     id = parseInt(id);
-    //     let p = saop.item.changeItem(id, itemId, count, {
-    //         from: user.getId() + "",
-    //         reason, memo
-    //     });
-    //     utils.responseProm(res, p);
-    // }
 });
 
 
@@ -1296,6 +1280,49 @@ router.post('/survey/user/thumbnail', (req, res) => {
     });
 });
 
+/**
+ * @api {get} admin/user/find 按照id 或者 账号查询代理信息，优先ID
+ * @class user
+ * @param {id} id 玩家id
+ * @param {string} account 账号
+ * @apiSuccessExample 返回
+ * {
+ *  "account": "1", 账号
+ *  "gold": 1, 剩余金币数
+ *  "diamond": 1, 剩余钻石数
+ *  "bindDiamond": 1, 剩余绑定钻石数
+ *  "id": 1, id
+ *  "nick": "1", 昵称
+ * }
+ */
+router.get('/user/find', async (req, res) => {
+    if (!req.admin) {
+        utils.response(res, { code: 402, msg: '登录失效！' });
+        return;
+    }
+
+    let { id, account } = req.query;
+    id = parseInt(id) || null;
+    account = account || null;
+
+    if ((!id || !utils.isId(id)) && (!account || !utils.isString(account, 1))) {
+        return utils.responseError(res, '参数错误');
+    }
+
+    if (req.admin && req.admin.isAgent()) {
+        let user = await model.User.findById(id);
+        if (!user || (user.agentId != req.admin.getId())) {
+            return utils.response(res, cons.ResultCode.UNKNOWN_USER());
+        }
+    }
+
+    db.call('proc_user_find', [id, account], true, (err, result) => {
+        if (err) {
+            return utils.responseError(res);
+        }
+        utils.responseOK(res, result[0][0] || null);
+    });
+});
 
 /**
  * @api {post} admin/user/bind/agent 玩家绑定代理

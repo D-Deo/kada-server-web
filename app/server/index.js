@@ -86,6 +86,15 @@ class Server {
             });
         });
     }
+
+    postp2(route, params) {
+        return new Promise((resolve, reject) => {
+            this.post(route, params, (result) => {
+                resolve(result);
+            });
+        });
+    }
+
 }
 
 

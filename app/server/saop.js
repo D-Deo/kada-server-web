@@ -13,16 +13,21 @@ saop.item.changeItem = (userId, itemId, count, exts) => {
     return saop.item.changeItems(userId, utils.item.toItems(itemId, count), exts);
 };
 
+saop.item.changeItem2 = (userId, itemId, count, exts) => {
+    return saop.item.changeItems2(userId, utils.item.toItems(itemId, count), exts);
+};
 
 saop.item.changeItem_Gold = (userId, count, exts) => {
     return saop.item.changeItems(userId, utils.item.toItems(cons.Item.GOLD(), count), exts);
 };
 
-
 saop.item.changeItems = (userId, items, exts) => {
     return server.postp('item/change', {userId, items, exts});
 };
 
+saop.item.changeItems2 = (userId, items, exts) => {
+    return server.postp2('item/change', {userId, items, exts});
+};
 
 saop.item.useItem = (userId, itemId, count, exts) => {
     return saop.item.useItems(userId, utils.item.toItems(itemId, count), exts);

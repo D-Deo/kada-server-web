@@ -224,29 +224,26 @@ router.get('/feedback', (req, res) => {
  *  "nick": "1", 昵称
  * }
  */
-router.get('/find', (req, res) => {
+router.get('/find', async (req, res) => {
     let { id, account } = req.query;
     id = parseInt(id) || null;
     account = account || null;
 
-    if ((id && !utils.isId(id)) &&
-        (account && !utils.isString(account, 6))) {
-        return utils.responseError(res);
+    if ((!id || !utils.isId(id)) && (!account || !utils.isString(account, 1))) {
+        return utils.responseError(res, '参数错误');
     }
 
     if (req.admin && req.admin.isAgent()) {
-        let user = model.User.findById(id);
-        if (user.agentId != req.admin.getId()) { 
+        let user = await model.User.findById(id);
+        if (!user || (user.agentId != req.admin.getId())) {
             return utils.responseError(res, '没有找到对应的玩家');
         }
     }
 
     db.call('proc_user_find', [id, account], true, (err, result) => {
         if (err) {
-            utils.responseError(res);
-            return;
+            return utils.responseError(res);
         }
-
         utils.responseOK(res, result[0][0] || null);
     });
 });
@@ -384,7 +381,9 @@ router.post('/login/records', (req, res) => {
  *  "sex": 玩家性别
  * }
  */
-router.post('/login/info', (req, res) => {
+router.post('/login/info', async (req, res) => {
+    let item = await model.Item.findOne({ where: { userId: req.admin.getId(), itemId: cons.Item.DIAMOND() } });
+    req.admin.diamond = item ? item.count : 0;
     utils.responseOK(res, req.admin.toJson_Login());
 });
 

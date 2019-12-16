@@ -28,6 +28,7 @@ api['/api/admin/permission/add'] = { type: 1, session: true };
 api['/api/admin/permission/commit'] = { type: 1, session: true };
 api['/api/admin/agent/register'] = { type: 1, session: true };
 api['/api/admin/charge/agent'] = { type: 1, session: true };
+api['/api/admin/user/find'] = { type: 1, session: true };
 api['/api/admin/user/details'] = { type: 1, session: true };
 api['/api/admin/user/details/addup'] = { type: 1, session: true };
 api['/api/admin/user/bank/list'] = { type: 1, session: true };
