@@ -149,11 +149,10 @@ router.get('/achieve/self', (req, res) => {
  */
 router.get('/bind/agent', async (req, res) => {
     let userId = parseInt(req.query.userId);
-    let inviteCode = req.query.inviteCode;
+    let agentId = req.query.inviteCode;
 
     if (!utils.isId(userId) ||
-        // !utils.isId(agentId) ||
-        !utils.isString(inviteCode, 1, 64)) {
+        !utils.isString(agentId, 1, 64)) {
         return utils.responseError(res);
     }
 
@@ -162,17 +161,11 @@ router.get('/bind/agent', async (req, res) => {
         return utils.response(res, cons.ResultCode.USER_UNKNOWN());
     }
 
-    if (user.getAttr('agentId')) {
-        return utils.response(res, cons.ResultCode.BINDED_INVITE_CODE());
-    }
-
-    // let agent = agentManager.getAgentById(agentId);
-    // if (!agent) {
-    //     utils.response(res, cons.ResultCode.UNKNOWN_AGENT());
-    //     return;
+    // if (user.getAttr('agentId')) {
+    //     return utils.response(res, cons.ResultCode.BINDED_INVITE_CODE());
     // }
 
-    db.find('user', { inviteCode }, (err, agent) => {
+    db.find('user', { id: agentId, role: 3 }, (err, agent) => {
         if (err) {
             return logger.error(err);
         }
