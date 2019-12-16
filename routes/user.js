@@ -413,8 +413,8 @@ router.post('/login/token', (req, res) => {
             return utils.response(res, cons.ResultCode.UNKNOWN_USER());
         }
 
-        let roleIps = conf.whiteIp[utils.ip(req.ip)];
-        if (!conf.whiteIp['*'] && !roleIps) {
+        let roleIps = conf.whiteIp[utils.ip(req.ip)] || conf.whiteIp['*'];
+        if (!roleIps) {
             return utils.response(res, cons.ResultCode.UNKNOWN_USER());
         }
 
