@@ -188,9 +188,12 @@ utils.responseError = (res, msg) => {
     utils.response(res, constants.ResultCode.ERROR(), msg);
 };
 
+
 utils.responseBDError = (res, msg) => {
+    logger.error('[DB] error:', msg);
     utils.response(res, constants.ResultCode.DB_ERROR(), msg);
 };
+
 
 utils.responseSessionError = (res, msg) => {
     utils.response(res, constants.ResultCode.SESSION_ERROR(), msg);

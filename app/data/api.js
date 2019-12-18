@@ -127,6 +127,7 @@ api['/api/user/bind/agent'] = { session: false };
 api['/api/user/roundabout/free'] = { session: false };
 api['/api/user/roundabout/diamond'] = { session: false };
 api['/api/user/roundabout/remain'] = { session: false };
+api['/api/user/item'] = { session: false };
 api['/api/user/item/records'] = { session: false };
 api['/api/user/property/rank'] = { session: false };
 api['/api/user/single/rank'] = { session: false };

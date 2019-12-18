@@ -24,7 +24,7 @@ const logger = require('log4js').getLogger('admin');
 let router = express.Router();
 
 /**
- * @api {get} admin/accounts 获取帐号列表
+ * @api {get} api/admin/accounts 获取帐号列表
  * @class admin
  * @param {number} status            全部(-1) 正常(0) 冻结(11)
  * @param {number} roleId            全部(0) 管理员(1) 客服(2) 代理(3) 玩家(11) 机器人(1000)
@@ -89,7 +89,7 @@ router.get('/accounts', (req, res) => {
 });
 
 /**
- * @api {post} admin/accounts/add 添加帐号
+ * @api {post} api/admin/accounts/add 添加帐号
  * @class admin
  * @param {string} account 帐号
  * @param {string} password 帐号密码
@@ -157,7 +157,7 @@ router.post('/accounts/add', (req, res) => {
 
 
 /**
- * @api {post} admin/accounts/permission 修改玩家类型
+ * @api {post} api/admin/accounts/permission 修改玩家类型
  * @param {number} id 玩家ID
  * @param {string} permission 玩家类型
  */
@@ -236,7 +236,7 @@ router.post('/accounts/permission', (req, res) => {
 });
 
 /**
- * @api {get} admin/permission 获取权限配置列表
+ * @api {get} api/admin/permission 获取权限配置列表
  * @apiSuccessExample 返回
  * [{
  *  "id": 1, 权限ID
@@ -261,7 +261,7 @@ router.get('/permission', (req, res) => {
 });
 
 /** 
- * @api {post} admin/permission/add 添加权限
+ * @api {post} api/admin/permission/add 添加权限
  * @class admin
  * @param {number} id 权限ID
  * @param {string} name 权限名称
@@ -416,7 +416,7 @@ router.post('/permission/add', (req, res) => {
 });
 
 /** 
- * @api {post} admin/permission/commit 设置权限
+ * @api {post} api/admin/permission/commit 设置权限
  * @class admin
  * @param {number} id 权限ID（要修改的权限ID，但ID本身不能被修改）
  * @param {string} name 权限名称
@@ -500,7 +500,7 @@ router.post('/permission/commit', (req, res) => {
 });
 
 /** 
- * @api {post} admin/permission/del 删除权限
+ * @api {post} api/admin/permission/del 删除权限
  * @class admin
  * @param {number} id 权限ID（要删除的权限ID）
  */
@@ -530,7 +530,7 @@ router.post('/permission/del', (req, res) => {
 });
 
 /**
- * @api {get} admin/role                获取角色列表
+ * @api {get} api/admin/role                获取角色列表
  * @class admin
  * @param {number} pindex            分页索引
  * @param {number} psize             分页大小
@@ -575,7 +575,7 @@ router.get('/role', (req, res) => {
 
 
 /**
- * @api {post} admin/role/add   添加角色
+ * @api {post} api/admin/role/add   添加角色
  * @class admin
  * @param {number} roleId    角色Id
  * @param {string} name      角色名称
@@ -604,7 +604,7 @@ router.post('/role/add', (req, res) => {
 });
 
 /**
- * @api {post} admin/role/update   角色修改
+ * @api {post} api/admin/role/update   角色修改
  * @class admin
  * @param {id} arId      数据Id
  * @param {number} roleId    角色Id
@@ -635,7 +635,7 @@ router.post('/role/update', (req, res) => {
 });
 
 /** 
- * @api {post} admin/role/del 删除角色
+ * @api {post} api/admin/role/del 删除角色
  * @class admin
  * @param {id} arId 角色数据ID（要删除的角色数据ID）
  */
@@ -658,7 +658,7 @@ router.post('/role/del', (req, res) => {
 
 
 /**
- * @api {post} admin/agent/register 代理注册
+ * @api {post} api/admin/agent/register 代理注册
  * @class admin
  * @param {string} account 账号 - 手机号码
  * @param {string} address 通讯地址
@@ -729,7 +729,7 @@ router.post('/agent/register', (req, res) => {
 
 
 /**
- * @api {post} admin/agent/level 代理等级设置
+ * @api {post} api/admin/agent/level 代理等级设置
  * @class admin
  * @param {id} agentId 代理id
  * @param {number} level 金(0) 银(1) 授权(2)
@@ -756,7 +756,7 @@ router.post('/agent/level', (req, res) => {
 
 
 /**
- * @api {post} admin/charge/agent 给代理充值
+ * @api {post} api/admin/charge/agent 给代理充值
  * @class admin
  * @param {id} id 代理id
  * @param {enum} itemId 物品id => 物品类型
@@ -793,7 +793,7 @@ router.post('/charge/agent', (req, res) => {
 
 
 /**
- * @api {post} admin/charge/user 给玩家充值
+ * @api {post} api/admin/charge/user 给玩家充值
  * @class admin
  * @param {id} id 玩家id
  * @param {enum} itemId 物品id => 物品类型
@@ -942,7 +942,7 @@ router.get('/charge/package', (req, res) => {
 
 
 /**
- * @api {post} admin/charge/package 修改套餐信息
+ * @api {post} api/admin/charge/package 修改套餐信息
  * @class admin
  * @param {number} level 套餐等级
  * @param {json} package 套餐数据
@@ -986,7 +986,7 @@ router.post('/charge/package', (req, res) => {
 
 
 /**
- * @api {post} admin/roundabout/commit 大转盘兑换
+ * @api {post} api/admin/roundabout/commit 大转盘兑换
  * @class admin
  * @param {id} id id
  */
@@ -1016,7 +1016,7 @@ router.post('/roundabout/commit', (req, res) => {
 
 
 /**
- * @api {post} admin/roundabout/details 大转盘抽奖列表
+ * @api {post} api/admin/roundabout/details 大转盘抽奖列表
  * @class admin
  * @param {number} type 免费版(1) 钻石版(2)
  * @param {number} page 分页索引
@@ -1056,7 +1056,7 @@ router.post('/roundabout/details', (req, res) => {
 
 
 /**
- * @api {post} admin/survey/agent/charge 代理概况-充值列表
+ * @api {post} api/admin/survey/agent/charge 代理概况-充值列表
  * @class admin
  * @param {id} agentId 代理id
  * @param {number} page 分页索引
@@ -1100,7 +1100,7 @@ router.post('/survey/agent/charge', (req, res) => {
 });
 
 /**
- * @api {post} admin/survey/agent/sell 代理概况-销售列表
+ * @api {post} api/admin/survey/agent/sell 代理概况-销售列表
  * @class admin
  * @param {id} agentId 代理id
  * @param {number} page 分页索引
@@ -1145,7 +1145,7 @@ router.post('/survey/agent/sell', (req, res) => {
 
 
 /**
- * @api {post} admin/survey/agent/thumbnail 代理概况-简要信息
+ * @api {post} api/admin/survey/agent/thumbnail 代理概况-简要信息
  * @class admin
  * @param {id} agentId 代理id
  * @apiSuccessExample 返回
@@ -1181,7 +1181,7 @@ router.post('/survey/agent/thumbnail', (req, res) => {
 
 
 /**
- * @api {post} admin/survey/user/historys 用户概况-战绩列表
+ * @api {post} api/admin/survey/user/historys 用户概况-战绩列表
  * @class admin
  * @param {id} userId 玩家Id
  * @param {number} page 分页索引
@@ -1239,7 +1239,7 @@ router.post('/survey/user/historys', (req, res) => {
 
 
 /**
- * @api {post} admin/survey/user/thumbnail 用户概况-简要信息
+ * @api {post} api/admin/survey/user/thumbnail 用户概况-简要信息
  * @class admin
  * @param {id} userId 玩家id
  * @apiSuccessExample 返回
@@ -1281,7 +1281,7 @@ router.post('/survey/user/thumbnail', (req, res) => {
 });
 
 /**
- * @api {get} admin/user/find 按照id 或者 账号查询代理信息，优先ID
+ * @api {get} api/admin/user/find 按照id 或者 账号查询代理信息，优先ID
  * @class user
  * @param {id} id 玩家id
  * @param {string} account 账号
@@ -1325,7 +1325,7 @@ router.get('/user/find', async (req, res) => {
 });
 
 /**
- * @api {post} admin/user/bind/agent 玩家绑定代理
+ * @api {post} api/admin/user/bind/agent 玩家绑定代理
  * @class user
  * @param {number} agentId 代理id
  * @param {number} userId 玩家id
@@ -1360,7 +1360,7 @@ router.post('/user/bind/agent', (req, res) => {
 });
 
 /**
- * @api {post} admin/user/bank/list 玩家银行卡
+ * @api {post} api/admin/user/bank/list 玩家银行卡
  */
 router.post('/user/bank/list', (req, res) => {
     let { userId } = req.body;
@@ -1380,7 +1380,7 @@ router.post('/user/bank/list', (req, res) => {
 });
 
 /**
- * @api {post} admin/user/details 玩家列表
+ * @api {post} api/admin/user/details 玩家列表
  * @class admin
  * @param {number} page 分页索引
  * @param {number} skip 分页大小
@@ -1518,7 +1518,7 @@ router.post('/user/stat_pay_win', (req, res) => {
 });
 
 /**
- * @api {post} admin/user/details/addup 玩家列表统计
+ * @api {post} api/admin/user/details/addup 玩家列表统计
  * @class admin
  * @param {number} page 分页索引
  * @param {number} skip 分页大小
@@ -1604,7 +1604,7 @@ router.post('/user/details/addup', (req, res) => {
 
 
 /**
- * @api {post} admin/user/suspend/commit 玩家封禁操作
+ * @api {post} api/admin/user/suspend/commit 玩家封禁操作
  * @class admin
  * @param {number} commit 解除(0) 删除(1) 冻结(11) 黑名单（12）
  * @param {string} desp 描述
@@ -1645,7 +1645,7 @@ router.post('/user/suspend/commit', (req, res) => {
 });
 
 /**
- * @api {post} admin/user/suspend/details 玩家冻结列表
+ * @api {post} api/admin/user/suspend/details 玩家冻结列表
  * @class admin
  * @param {id} userId 玩家ID null-全部
  * @param {number} type 冻结状态 null-全部 0-解冻 1-冻结
@@ -1693,7 +1693,7 @@ router.post('/user/suspend/details', (req, res) => {
 
 
 /**
- * @api {post} admin/user/password/commit 重置玩家密码
+ * @api {post} api/admin/user/password/commit 重置玩家密码
  * @class admin
  * @param {number} userId 玩家id
  * @param {string} password 新密码
@@ -1776,7 +1776,7 @@ router.post('/user/password/commit', async (req, res) => {
 });
 
 /**
- * @api {post} admin/user/level/change 修改玩家分类
+ * @api {post} api/admin/user/level/change 修改玩家分类
  */
 router.post('/user/level/change', (req, res) => {
     let userId = req.body.userId;
@@ -1815,7 +1815,7 @@ router.post('/user/level/change', (req, res) => {
 });
 
 /**
- * @api {post} admin/user/edit 修改玩家信息
+ * @api {post} api/admin/user/edit 修改玩家信息
  */
 router.post('/user/edit', (req, res) => {
     let userId = req.body.userId;
@@ -2010,7 +2010,7 @@ router.post('/user/edit', (req, res) => {
 });
 
 /**
- * @api {get} admin/user/game/details 玩家游戏列表
+ * @api {get} api/admin/user/game/details 玩家游戏列表
  * @class admin
  * @param {number} pindex 分页索引
  * @param {number} psize 分页大小
@@ -2050,7 +2050,7 @@ router.get('/user/game/details', (req, res) => {
 });
 
 /**
- * @api {get} /admin/agent/details
+ * @api {get} api/admin/agent/details 代理查询
  */
 router.get('/agent/details', (req, res) => {
     let userId = (req.query.userId);
@@ -2066,26 +2066,24 @@ router.get('/agent/details', (req, res) => {
 
     if (!utils.isNumber(pindex, 0) ||
         !utils.isNumber(psize, 0)) {
-        utils.responseError(res);
-        return;
+        return utils.responseError(res);
     }
 
     userId = utils.isString(userId) ? userId : null;
 
     db.call('proc_agent_details', [userId, from, to, pindex, psize], true, (err, d) => {
         if (err) {
-            utils.responseError(res);
-            return;
+            return utils.responseBDError(res);
         }
 
         let count = d[1][0].total;
-        _.each(d[0], d => {
-            //let [srate, srebate] = data.getRebate(d.sachieve + d.cachieve);
-            //let [crate, crebate] = data.getRebate(d.cachieve);
-            //d.rate = srate;
-            //d.rebate = srebate - crebate;
-            console.log(d);
-        });
+        // _.each(d[0], d => {
+        //     //let [srate, srebate] = data.getRebate(d.sachieve + d.cachieve);
+        //     //let [crate, crebate] = data.getRebate(d.cachieve);
+        //     //d.rate = srate;
+        //     //d.rebate = srebate - crebate;
+        //     console.log(d);
+        // });
         utils.responseOK(res, { count, rows: d[0] });
     });
 });
@@ -2093,7 +2091,7 @@ router.get('/agent/details', (req, res) => {
 
 /**
  * 查询当前用户的下级代理
- * @api {get} /admin/agent/details
+ * @api {get} api/admin/agent/detailssub
  */
 router.get('/agent/detailssub', (req, res) => {
     //let userId = (req.query.userId);
@@ -2139,7 +2137,7 @@ router.get('/agent/detailssub', (req, res) => {
 });
 
 /**
- * @api {get} admin/rebate/record 历史分红记录
+ * @api {get} api/admin/rebate/record 历史分红记录
  * @class admin
  * @param {number} userId    玩家id         全部 null
  * @param {string} fromStart 起始时间开始    全部 null
@@ -2194,7 +2192,7 @@ router.get('/rebate/record', (req, res) => {
 
 
 /**
- * @api {get} admin/achieve/record 当前结算业绩列表
+ * @api {get} api/admin/achieve/record 当前结算业绩列表
  * @class admin
  * @param {number} userId            玩家id    全部 null
  * @param {number} recommenderId     推广人ID    全部 null
@@ -2247,7 +2245,7 @@ router.get('/achieve/record', (req, res) => {
 });
 
 /**
- * @api {get} admin/settlement/pay 代理的玩家充值明细
+ * @api {get} api/admin/settlement/pay 代理的玩家充值明细
  * @class admin
  * @param {number} userId            代理id    全部 null
  * @param {number} pindex 分页索引
@@ -2285,7 +2283,7 @@ router.get('/settlement/pay', (req, res) => {
 });
 
 /**
- * @api {get} admin/settlement/withdraw 代理的玩家体现明细
+ * @api {get} api/admin/settlement/withdraw 代理的玩家体现明细
  * @class admin
  * @param {number} userId            代理id    全部 null
  * @param {number} pindex 分页索引
@@ -2324,7 +2322,7 @@ router.get('/settlement/withdraw', (req, res) => {
 
 
 /**
- * @api {get} admin/settlement/items 代理的玩家盈亏明细
+ * @api {get} api/admin/settlement/items 代理的玩家盈亏明细
  * @class admin
  * @param {number} userId            代理id    全部 null
  * @param {number} pindex 分页索引
@@ -2363,7 +2361,7 @@ router.get('/settlement/items', (req, res) => {
 
 
 /**
- * @api {post} admin/mail/commit    新增邮件
+ * @api {post} api/admin/mail/commit    新增邮件
  * @class admin
  * @param {id} senderId          发布人id
  * @param {string} caption       标题
@@ -2446,7 +2444,7 @@ router.route('/mail/commit').post((req, res) => {
 
 
 /**
- * @api {post} admin/mail/update    更新邮件内容
+ * @api {post} api/admin/mail/update    更新邮件内容
  * @class admin
  * @param {id} mId               邮件id
  * @param {string} caption       标题
@@ -2505,7 +2503,7 @@ router.route('/mail/update').post((req, res) => {
 
 
 /**
- * @api {get} admin/mail/list       邮件列表
+ * @api {get} api/admin/mail/list       邮件列表
  * @class admin
  * @param {number} sended        全部(-1) 未发送(0) 已发送(1) 已过期(2) 已删除(3)
  * @param {number} pindex        分页索引
@@ -2556,7 +2554,7 @@ router.get('/mail/list', (req, res) => {
 });
 
 /** 
- * @api {post} admin/bankcard/del 删除用户银行卡
+ * @api {post} api/admin/bankcard/del 删除用户银行卡
  * @class admin
  * @param {id} mId bankcardID（要删除的银行卡绑定ID）
  */
@@ -2578,7 +2576,7 @@ router.post('/bankcard/del', (req, res) => {
 });
 
 /** 
- * @api {post} admin/bankcard/update 修改用户银行卡
+ * @api {post} api/admin/bankcard/update 修改用户银行卡
  * @class admin）
  */
 router.post('/bankcard/update', (req, res) => {
@@ -2600,7 +2598,7 @@ router.post('/bankcard/update', (req, res) => {
 });
 
 /** 
- * @api {post} admin/userlevel/update 修改用户分类
+ * @api {post} api/admin/userlevel/update 修改用户分类
  * @class admin）
  */
 router.post('/userlevel/update', (req, res) => {
@@ -2622,7 +2620,7 @@ router.post('/userlevel/update', (req, res) => {
 
 
 /** 
- * @api {post} admin/userlevel/del 删除用户分类
+ * @api {post} api/admin/userlevel/del 删除用户分类
  * @class admin
  * @param {id} mId bankcardID（要删除的银行卡绑定ID）
  */
@@ -2654,7 +2652,7 @@ router.post('/userlevel/del', (req, res) => {
 });
 
 /** 
- * @api {post} admin/bankcard/new 新增用户银行卡
+ * @api {post} api/admin/bankcard/new 新增用户银行卡
  * @class admin）
  */
 router.post('/bankcard/new', (req, res) => {
@@ -2676,7 +2674,7 @@ router.post('/bankcard/new', (req, res) => {
 });
 
 /** 
- * @api {post} admin/mail/del 删除邮件
+ * @api {post} api/admin/mail/del 删除邮件
  * @class admin
  * @param {id} mId 邮件ID（要删除的邮件ID）
  */
@@ -2731,7 +2729,7 @@ router.post('/mail/del', (req, res) => {
 
 
 /** 
- * @api {post} admin/room/params/commit 添加房间参数
+ * @api {post} api/admin/room/params/commit 添加房间参数
  * @class admin
  * @param {number} area              房间id
  * @param {string} name              房间名称
@@ -2811,7 +2809,7 @@ router.post('/room/params/commit', (req, res) => {
 
 
 /** 
- * @api {get} admin/room/params/list    房间参数列表
+ * @api {get} api/admin/room/params/list    房间参数列表
  * @class admin
  * @param {number} pindex    
  * @param {number} psize
@@ -2864,7 +2862,7 @@ router.get('/room/params/list', (req, res) => {
 
 
 /** 
- * @api {post} admin/room/params/update 修改房间参数
+ * @api {post} api/admin/room/params/update 修改房间参数
  * @class admin
  * @param {id}     rpId          id
  * @param {number} area          房间名称
@@ -2944,7 +2942,7 @@ router.route('/room/params/update').post((req, res) => {
 });
 
 /** 
- * @api {post} admin/room/params/del 删除房间参数
+ * @api {post} api/admin/room/params/del 删除房间参数
  * @class admin
  * @param {id} rpId 房间参数ID（要删除的房间参数ID）
  */
@@ -2991,7 +2989,7 @@ router.post('/room/params/del', (req, res) => {
 
 
 /**
- * @api {get} admin/jackpot/details    奖池
+ * @api {get} api/admin/jackpot/details    奖池
  * @class admin
  * @param {number}   pindex            
  * @param {number}   psize
@@ -3063,7 +3061,7 @@ router.get('/jackpot/details', (req, res) => {
 
 
 /**
- * @api {post} admin/charge/jackpot       调整当前奖池值
+ * @api {post} api/admin/charge/jackpot       调整当前奖池值
  * @class admin
  * @param {id}           userId        操作人ID
  * @param {string}       game          游戏
@@ -3116,7 +3114,7 @@ router.post('/charge/jackpot', (req, res) => {
 
 
 /**
- * @api {post} admin/charge/status        调整奖池状态值
+ * @api {post} api/admin/charge/status        调整奖池状态值
  * @class admin
  * @param {id}           userId        操作人ID
  * @param {string}       game          游戏
@@ -3268,7 +3266,7 @@ router.post('/charge/status', (req, res) => {
 });
 
 /**
- * @api {post} admin/charge/updateBlackList       更新黑名单
+ * @api {post} api/admin/charge/updateBlackList       更新黑名单
 
 router.post('/charge/updateBlackList', (req, res) => {
     console.log('进入updateBlackList')
@@ -3304,7 +3302,7 @@ router.post('/charge/updateBlackList', (req, res) => {
 
 
 /** 
- * @api {get} admin/jackpot/record        奖池操作记录
+ * @api {get} api/admin/jackpot/record        奖池操作记录
  * @class admin
  * @param {string}   game              游戏  
  * @param {number}   area              区域
@@ -3350,7 +3348,7 @@ router.get('/jackpot/record', (req, res) => {
 
 
 /** 
- * @api {post} admin/upg/setConfig         upg配置(param不传不设置)
+ * @api {post} api/admin/upg/setConfig         upg配置(param不传不设置)
  * @class admin
  * @param {string}    colds             冷钱包地址数组
  * @param {string}    gasPrice          事务gasPrice
@@ -3391,7 +3389,7 @@ router.post('/upg/setConfig', (req, res) => {
 });
 
 /** 
- * @api {get} admin/upg/getConfig          upg配置获取
+ * @api {get} api/admin/upg/getConfig          upg配置获取
  * @class admin
  * @param {string}    colds             冷钱包地址数组
  * @param {string}    gasPrice          事务gasPrice
@@ -3447,7 +3445,7 @@ router.get('/upg/getConfig', (req, res) => {
 
 
 /** 
- * @api {get} admin/upg/details             审核列表
+ * @api {get} api/admin/upg/details             审核列表
  * @class admin
  * @param {number}    pindex             分页索引
  * @param {number}    psize              分页数量
@@ -3489,7 +3487,7 @@ router.get('/upg/details', (req, res) => {
 
 
 /** 
- * @api {get} admin/upg/user/record            upg_user_record列表
+ * @api {get} api/admin/upg/user/record            upg_user_record列表
  * @class admin
  * @param {string}    timestamp              日期
  * @param {number}    pindex                 分页索引
@@ -3532,7 +3530,7 @@ router.get('/upg/user/record', (req, res) => {
 
 
 /** 
- * @api {post} admin/upg/reset                  重置upg总量
+ * @api {post} api/admin/upg/reset                  重置upg总量
  * @class admin
  * @param {string}    timestamp              日期
  * @param {number}    gross                  总量
@@ -3562,7 +3560,7 @@ router.post('/upg/reset', (req, res) => {
 
 
 /** 
- * @api {post} admin/upg/publish                发送奖励(审批同意按钮)
+ * @api {post} api/admin/upg/publish                发送奖励(审批同意按钮)
  * @class admin
  * @param {string}    timestamp              日期
  * @param {string}    field                  (bostate-->wee分红, upstate-->upg, urstate-->排名)
@@ -3590,7 +3588,7 @@ router.post('/upg/publish', (req, res) => {
 });
 
 /** 
- * @api {post} admin//wallet/config/update                  修改冷钱包地址
+ * @api {post} api/admin//wallet/config/update                  修改冷钱包地址
  * @class admin
  * @param {number}    index                 索引
  * @param {string}    cold                  值
@@ -3610,7 +3608,7 @@ router.post('/wallet/config/update', (req, res) => {
 });
 
 /** 
- * @api {post} admin/wallet/config/delete         删除冷钱包地址
+ * @api {post} api/admin/wallet/config/delete         删除冷钱包地址
  * @class admin
  * @param {string}    cold                       值
  * @apiSuccess {json}                               返回
@@ -3629,7 +3627,7 @@ router.post('/wallet/config/delete', (req, res) => {
 
 
 /** 
- * @api {post} admin/marquee/onoff              自动跑马灯开关
+ * @api {post} api/admin/marquee/onoff              自动跑马灯开关
  * @class admin
  * @param {boolean}    onoff                 值(true|false)
  * @apiSuccess {json}                           返回
@@ -3644,7 +3642,7 @@ router.post('/marquee/onoff', (req, res) => {
 
 
 /** 
- * @api {post} admin/robot/money/reset         排行榜金币区间段修改
+ * @api {post} api/admin/robot/money/reset         排行榜金币区间段修改
  * @class admin
  * @param {number}    minRank               最小排名
  * @param {number}    maxRank               最大排名
@@ -3670,7 +3668,7 @@ router.post('/robot/money/reset', (req, res) => {
 });
 
 /**
- * @api {get} /admin/pay/bank/details
+ * @api {get} api/admin/pay/bank/details
  */
 router.get('/pay/bank/details', (req, res) => {
     let p = model.AdminPayBank.findAndCountAll();
@@ -3678,7 +3676,7 @@ router.get('/pay/bank/details', (req, res) => {
 });
 
 /**
- * @api {get} /admin/pay/bank/details
+ * @api {get} api/admin/pay/bank/details
  */
 router.get('/pay/wx/details', (req, res) => {
     let p = model.AdminPayWx.findAndCountAll();
@@ -3687,7 +3685,7 @@ router.get('/pay/wx/details', (req, res) => {
 
 /**
  * 后台操作日志
- * @api {post} /admin/operate/records
+ * @api {post} api/admin/operate/records
  */
 router.post('/operate/records', (req, res) => {
     let { userId, ip, desc, from, to, from_createTime, to_createTime } = req.body;

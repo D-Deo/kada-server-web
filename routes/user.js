@@ -37,7 +37,7 @@ let router = express.Router();
 
 
 /**
- * @api {get} user/achieve/children 当前直属结算业绩列表
+ * @api {get} api/user/achieve/children 当前直属结算业绩列表
  * @class user
  * @param {number} userId 玩家id
  * @param {number} pindex 分页索引
@@ -101,7 +101,7 @@ router.get('/recommend', (req, res) => {
 });
 
 /**
- * @api {get} user/achieve/self 当前自己结算业绩
+ * @api {get} api/user/achieve/self 当前自己结算业绩
  * @class user
  * @param {number} userId 玩家id
  * @apiSuccess {json} 返回
@@ -141,7 +141,7 @@ router.get('/achieve/self', (req, res) => {
 });
 
 /**
- * @api {get} user/bind/agent 玩家绑定代理
+ * @api {get} api/user/bind/agent 玩家绑定代理
  * @class user
  * @param {number} agentId 代理id
  * @param {number} userId 玩家id
@@ -182,7 +182,7 @@ router.get('/bind/agent', async (req, res) => {
 
 
 /**
- * @api {get} user/feedback 反馈
+ * @api {get} api/user/feedback 反馈
  * @class user
  * @param {id} id 玩家id
  * @param {string} content 反馈内容
@@ -203,7 +203,7 @@ router.get('/feedback', (req, res) => {
 
 
 /**
- * @api {get} user/find 按照id 或者 账号查询代理信息，优先ID
+ * @api {get} api/user/find 按照id 或者 账号查询代理信息，优先ID
  * @class user
  * @param {id} id 玩家id
  * @param {string} account 账号
@@ -241,9 +241,28 @@ router.get('/find', async (req, res) => {
     });
 });
 
+/**
+ * @api {get} api/user/item 获取玩家道具
+ * @class user
+ * @param {id} id 玩家ID
+ */
+router.get('/item', async (req, res) => {
+    let { userId } = req.query;
+    userId = parseInt(userId) || null;
+
+    if (!userId || !utils.isId(userId)) {
+        return utils.responseError(res);
+    }
+
+    let items = await model.Item.findAll({ where: { userId } });
+    items = _.map(items, item => {
+        return { itemId: item.itemId, count: item.count };
+    });
+    utils.responseOK(res, items);
+});
 
 /**
- * @api {post} user/item/records 物品变动记录
+ * @api {post} api/user/item/records 物品变动记录
  * @class user
  * @param {id} userId 玩家id null 全部
  * @param {id} itemId 物品id -1 全部
@@ -294,7 +313,7 @@ router.post('/item/records', (req, res) => {
 });
 
 /**
- * @api {post} /user/login/records 登录日志
+ * @api {post} api/user/login/records 登录日志
  * @class user
  */
 router.post('/login/records', (req, res) => {
@@ -362,7 +381,7 @@ router.post('/login/records', (req, res) => {
 });
 
 /**
- * @api {post} user/login/info 登录信息
+ * @api {post} api/user/login/info 登录信息
  * @class user
  * @param {string} account 账号
  * @param {string} password 密码
@@ -382,7 +401,7 @@ router.post('/login/info', async (req, res) => {
 
 
 /**
- * @api {post} user/login/token 登录凭证
+ * @api {post} api/user/login/token 登录凭证
  * @class user
  * @param {string} account 账号
  * @param {string} password 密码
@@ -509,7 +528,7 @@ router.post('/login/token', (req, res) => {
 
 
 /**
- * @api {get} user/mail/delete 删除邮件
+ * @api {get} api/user/mail/delete 删除邮件
  * @class user
  * @param {id} id 邮件id
  * @param {id} userId 玩家id
@@ -551,7 +570,7 @@ router.get('/mail/delete', (req, res) => {
 
 
 /**
- * @api {get} user/mail/details 获取邮件列表
+ * @api {get} api/user/mail/details 获取邮件列表
  * @class user
  * @param {id} userId 玩家id
  */
@@ -578,7 +597,7 @@ router.get('/mail/details', (req, res) => {
 
 
 /**
- * @api {get} user/mail/read 读取邮件
+ * @api {get} api/user/mail/read 读取邮件
  * @class user
  * @param {id} id 邮件id
  * @param {id} userId 玩家id
@@ -611,7 +630,7 @@ router.get('/mail/read', (req, res) => {
 
 
 /**
- * @api {get} user/mail/receive 领取邮件
+ * @api {get} api/user/mail/receive 领取邮件
  * @class user
  * @param {id} id 邮件id
  * @param {id} userId 玩家id
@@ -649,7 +668,7 @@ router.get('/mail/receive', (req, res) => {
 
 
 /**
- * @api {get} user/mall/order 玩家购买下单
+ * @api {get} api/user/mall/order 玩家购买下单
  * @class user
  * @param {id} suitId 套餐id
  * @param {id} userId 玩家id
@@ -684,7 +703,7 @@ router.get('/mall/order', (req, res) => {
 });
 
 /**
- * @api {post} user/info/commit 玩家修改个人信息
+ * @api {post} api/user/info/commit 玩家修改个人信息
  * @class user
  * @param {string} account 帐号 -- 手机号码
  * @param {string} nick 昵称 null or 空字符串 都表示不修改
@@ -725,7 +744,7 @@ router.route('/info/commit').post((req, res) => {
 });
 
 /**
- * @api {post} user/password/commit 玩家修改账号密码 - 提交信息
+ * @api {post} api/user/password/commit 玩家修改账号密码 - 提交信息
  * @class user
  * @param {string} account 账号 - 手机号码
  * @param {string} code 验证码
@@ -763,7 +782,7 @@ router.route('/password/commit').post((req, res) => {
 
 
 /**
- * @api {get} user/password/send 玩家修改密碼 - 发送验证码
+ * @api {get} api/user/password/send 玩家修改密碼 - 发送验证码
  * @class user
  * @param {string} account 账号 - 手机号码
  */
@@ -799,7 +818,7 @@ router.get('/password/send', (req, res) => {
 });
 
 /**
- * @api {post} user/password/commit 玩家修改银行密码 - 提交信息
+ * @api {post} api/user/password/commit 玩家修改银行密码 - 提交信息
  * @class user
  * @param {string} account 账号 - 手机号码
  * @param {string} code 验证码
@@ -837,7 +856,7 @@ router.route('/password2/commit').post((req, res) => {
 
 
 /**
- * @api {get} user/password/send 玩家修改密碼 - 发送验证码
+ * @api {get} api/user/password/send 玩家修改密碼 - 发送验证码
  * @class user
  * @param {string} account 账号 - 手机号码
  */
@@ -873,7 +892,7 @@ router.get('/password2/send', (req, res) => {
 });
 
 /**
- * @api {get} user/rebate/self 历史分红详细信息
+ * @api {get} api/user/rebate/self 历史分红详细信息
  * @class user
  * @param {number} userId 玩家id
  * @param {number} index 分红编号
@@ -921,7 +940,7 @@ router.get('/rebate/children', (req, res) => {
 
 
 /**
- * @api {get} user/rebate/self 历史分红记录
+ * @api {get} api/user/rebate/self 历史分红记录
  * @class user
  * @param {number} userId 玩家id
  * @param {number} pindex 分页索引
@@ -967,7 +986,7 @@ router.get('/rebate/self', (req, res) => {
 
 
 /**
- * @api {post} user/message/commit 新增消息
+ * @api {post} api/user/message/commit 新增消息
  * @class user
  * @param {id} userId            发布人ID 
  * @param {number} type          类型(1:跑马灯;2:公告)
@@ -1055,7 +1074,7 @@ router.route('/message/commit').post((req, res) => {
 
 
 /**
- * @api {post} user/message/update  更新消息内容
+ * @api {post} api/user/message/update  更新消息内容
  * @class user
  * @param {id} msgId             消息id
  * @param {string} content       内容
@@ -1095,7 +1114,7 @@ router.route('/message/update').post((req, res) => {
 
 
 /**
- * @api {get} user/message/list     消息列表
+ * @api {get} api/user/message/list     消息列表
  * @class user
  * @param {number} pindex        分页索引
  * @param {number} psize         分页大小
@@ -1147,7 +1166,7 @@ router.get('/message/list', (req, res) => {
 
 
 /**
- * @api {get} user/announce/details     获取公告列表
+ * @api {get} api/user/announce/details     获取公告列表
  * @class user
  * @apiSuccess {json}                   返回
  *  [{
@@ -1171,7 +1190,7 @@ router.get('/announce/details', (req, res) => {
 
 
 /** 
- * @api {post} user/message/del 删除消息
+ * @api {post} api/user/message/del 删除消息
  * @class user
  * @param {id} msgId 消息ID（要删除的消息ID）
  */
@@ -1216,7 +1235,7 @@ router.post('/message/del', (req, res) => {
 });
 
 // /**
-//  * @api {post} user/register/account/commit 玩家账号注册 - 提交信息
+//  * @api {post} api/user/register/account/commit 玩家账号注册 - 提交信息
 //  * @class user
 //  * @param {string} account 账号
 //  * @param {string} password 密码
@@ -1306,7 +1325,7 @@ router.post('/message/del', (req, res) => {
 // });
 
 // /**
-//  * @api {get, post} user/register/agent/bind 玩家推广页绑定代理
+//  * @api {get, post} api/user/register/agent/bind 玩家推广页绑定代理
 //  * @class user
 //  * @param {string} agentid 代理ID
 //  * @param {string} userip 用户ip
@@ -1327,7 +1346,7 @@ router.post('/message/del', (req, res) => {
 // });
 
 /**
- * @api {post} user/register/agent/bind 玩家推广页绑定代理
+ * @api {post} api/user/register/agent/bind 玩家推广页绑定代理
  * @class user
  * @param {string} agentId 代理ID
  * @param {string} userIp 用户ip
@@ -1360,7 +1379,7 @@ router.route('/register/agent/bind').all((req, res) => {
 
 /**
  * 暂时废弃
- * @api {post} user/register/commit 玩家注册 - 提交信息 
+ * @api {post} api/user/register/commit 玩家注册 - 提交信息 
  * @class user
  * @param {string} account 账号 - 手机号码
  * @param {string} code 验证码
@@ -1424,7 +1443,7 @@ router.route('/register/agent/bind').all((req, res) => {
 // });
 
 /**
- * @api {get} user/register/send/action
+ * @api {get} api/user/register/send/action
  * @class user
  * @param {string} account 账号 - 手机号码
  * @param {string} geetest_challenge
@@ -1480,7 +1499,7 @@ router.get('/register/send/action', (req, res) => {
 });
 
 /**
- * @api {get} user/register/send 玩家注册 - 发送验证码
+ * @api {get} api/user/register/send 玩家注册 - 发送验证码
  * @class user
  * @param {string} account 账号 - 手机号码
  */
@@ -1527,7 +1546,7 @@ router.get('/register/send', (req, res) => {
 });
 
 /**
- * @api {post} user/bind/account 游客绑定账号
+ * @api {post} api/user/bind/account 游客绑定账号
  * @class user
  * @param {number} userId 玩家id
  * @param {string} account 要绑定的账号
@@ -1585,7 +1604,7 @@ router.route('/bind/account').post((req, res) => {
 });
 
 /**
- * @api {get} user/bind/phone/commit 玩家绑定手机 提交验证码
+ * @api {get} api/user/bind/phone/commit 玩家绑定手机 提交验证码
  * @class user
  * @param {string} code 验证码
  * @param {string} name 玩家实名
@@ -1617,7 +1636,7 @@ router.get('/bind/phone/commit', (req, res) => {
 });
 
 /**
- * @api {get} user/bind/phone/send 玩家绑定手机 发送验证码
+ * @api {get} api/user/bind/phone/send 玩家绑定手机 发送验证码
  * @class user
  * @param {string} phone 绑定手机号码
  * @param {id} userId 玩家id
@@ -1657,7 +1676,7 @@ router.get('/bind/phone/send', (req, res) => {
 });
 
 /**
- * @api {get} user/roundabout/free 大转盘摇奖免费版
+ * @api {get} api/user/roundabout/free 大转盘摇奖免费版
  * @class user
  * @param {id} userId 玩家id
  * @apiSuccess {json} items 奖励物品
@@ -1695,7 +1714,7 @@ router.get('/roundabout/free', (req, res) => {
 
 
 /**
- * @api {get} user/roundabout/diamond 大转盘摇奖钻石版
+ * @api {get} api/user/roundabout/diamond 大转盘摇奖钻石版
  * @class user
  * @param {id} userId 玩家id
  * @apiSuccess {json} items 奖励物品
@@ -1734,7 +1753,7 @@ router.get('/roundabout/diamond', (req, res) => {
 
 
 /**
- * @api {get} user/roundabout/remain 大转盘摇奖剩余次数
+ * @api {get} api/user/roundabout/remain 大转盘摇奖剩余次数
  * @class user
  * @param {id} userId 玩家id
  */
@@ -1758,7 +1777,7 @@ router.get('/roundabout/remain', (req, res) => {
 
 
 /**
- * @api {get} user/property/rank        玩家日均排行
+ * @api {get} api/user/property/rank        玩家日均排行
  * @class user
  * @class {number} typenum              账号类型
  * @param {number} pindex            分页索引
@@ -1803,7 +1822,7 @@ router.get('/property/rank', (req, res) => {
 });
 
 /**
- * @api {get} user/single/rank          玩家个人排名
+ * @api {get} api/user/single/rank 玩家个人排名
  * @class user
  * @param {number} userId            玩家id
  * @apiSuccess {json} 返回
@@ -1834,7 +1853,7 @@ router.get('/single/rank', (req, res) => {
 });
 
 /**
- * @api {post} user/pay/complete 充值回调
+ * @api {post} api/user/pay/complete 充值回调
  * @class user
  * @param {string} account 账号 - 手机号码
  * @param {string} code 验证码
@@ -1861,7 +1880,7 @@ router.route('/pay/complete').post((req, res) => {
 });
 
 /**
-* @api {post} user/withdraw/complete 提现回调
+* @api {post} api/user/withdraw/complete 提现回调
 * @class user
 * @param {string} account 账号 - 手机号码
 * @param {string} code 验证码
@@ -1888,7 +1907,7 @@ router.route('/withdraw/complete').post((req, res) => {
 });
 
 /**
- * @api {get} user/bank/list 获取玩家银行卡
+ * @api {get} api/user/bank/list 获取玩家银行卡
  */
 router.get('/bank/list', (req, res) => {
     let { userId } = req.query;
@@ -1908,7 +1927,7 @@ router.get('/bank/list', (req, res) => {
 });
 
 /**
- * @api {get} user/belongto 设置玩家的上级代理
+ * @api {get} api/user/belongto 设置玩家的上级代理
  */
 router.get('/belongto', (req, res) => {
     let id = parseInt(req.query.id);
@@ -1969,8 +1988,7 @@ router.get('/shareurl', (req, res) => {
 });
 
 /**
- * 获取推广接口
- * @api get '/user/mytuiguang'
+ * @api {get} api/user/mytuiguang 获取推广接口
  */
 router.get('/mytuiguang', (req, res) => {
     let agentId = req.query.agentId;
@@ -1987,8 +2005,7 @@ router.get('/mytuiguang', (req, res) => {
 });
 
 /**
- * 获取推广接口
- * @api get '/user/recommend/qrcode'
+ * @api {get} api/user/recommend/qrcode 获取推广接口
  */
 router.get('/recommend/qrcode', (req, res) => {
     let agentId = req.query.agentId;
