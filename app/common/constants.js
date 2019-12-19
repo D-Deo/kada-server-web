@@ -329,7 +329,10 @@ constants.AgentState = {
 };
 
 
-
+constants.UserPayPush = {
+    UNPUSH: _.constant(0),
+    SUCCESS: _.constant(1),
+};
 
 
 constants.UserPayState = {

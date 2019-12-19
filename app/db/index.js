@@ -27,6 +27,23 @@ db.call = (name, params, select, cb) => {
 };
 
 
+db.pcall = (name, params, select) => {
+    let sql = 'CALL ' + name + db.toCallParamSql(params);
+    return db.sequelize.query(sql, { replacements: params, type: select ? Sequelize.QueryTypes.SELECT : Sequelize.QueryTypes.UPDATE })
+        .then(ret => {
+            let arr = [];
+            for (let i in ret[0]) {
+                arr.push(ret[0][i]);
+            }
+            return { err: null, ret: arr };
+        })
+        .catch(err => {
+            console.error(err);
+            return { err, ret: null }
+        });
+};
+
+
 db.delete = (table, filter, cb) => {
     let sql = `DELETE FROM \`${table}\` WHERE ${db.toAssignmentSql(filter)}`;
     db.sequelize.query(sql, { replacements: filter, type: Sequelize.QueryTypes.DELETE })

@@ -22,11 +22,11 @@ saop.item.changeItem_Gold = (userId, count, exts) => {
 };
 
 saop.item.changeItems = (userId, items, exts) => {
-    return server.postp('item/change', {userId, items, exts});
+    return server.postp('item/change', { userId, items, exts });
 };
 
 saop.item.changeItems2 = (userId, items, exts) => {
-    return server.postp2('item/change', {userId, items, exts});
+    return server.postp2('item/change', { userId, items, exts });
 };
 
 saop.item.useItem = (userId, itemId, count, exts) => {
@@ -40,7 +40,7 @@ saop.item.useItem_Gold = (userId, count, exts) => {
 
 
 saop.item.useItems = (userId, items, exts) => {
-    return server.postp('item/use', {userId, items, exts});
+    return server.postp('item/use', { userId, items, exts });
 };
 
 
@@ -48,9 +48,15 @@ saop.user = {};
 
 
 saop.user.password = (account, password) => {
-    return server.postp('user/password', {account, password});
+    return server.postp('user/password', { account, password });
 };
 
 saop.user.password2 = (account, password) => {
-    return server.postp('user/password2', {account, password});
+    return server.postp('user/password2', { account, password });
+};
+
+saop.user.payComplete = (account, orderId, money, commit) => {
+    return server.postp('user/pay/complete', { account, orderId, money, commit })
+        .then(msg => { return { msg } })
+        .catch(err => { return { err: err.msg } });
 };

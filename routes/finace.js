@@ -574,56 +574,56 @@ router.post('/pay/ingore', (req, res) => {
  * @param {id} id 订单id
  * @param {bool} commit 是否手动
  */
-router.post('/pay/manual', (req, res) => {
-    let { userId, id, money, commit } = req.body;
-
-    if (!utils.isString(id, 1, 255)) {
-        utils.responseError(res);
-        return;
+router.post('/pay/manual', async (req, res) => {
+    if (!req.admin) {
+        return utils.response(res, { code: 402, msg: '登录失效！' });
     }
 
-    (async () => {
-        let pay = await model.UserPay.find({ where: { id, money } });
-        if (!pay) {
-            utils.responseError(res, '订单不存在');
-            return;
-        }
+    let { id, money, commit } = req.body;
 
-        if (pay.state != 0 && (pay.state != 1 || pay.push != 0)) {
-            return utils.responseError(res, '订单已完成过，不可重复提交');
-        }
+    if (!utils.isString(id, 1, 255) ||
+        !utils.isNumber(money)) {
+        return utils.responseError(res);
+    }
 
-        if (utils.isId(userId)) {
-            let user = await model.User.findById(userId);
-            if (!user) {
-                utils.responseError(res);
-                return;
-            }
-            pay.adminId = userId;
-            // pay.updateTime = _.now();
-        }
+    let pay = await model.UserPay.find({ where: { id, money } });
+    if (!pay) {
+        return utils.responseError(res, '订单不存在');
+    }
 
-        pay.commit = commit || 0;
-        pay.save();
+    if (pay.state != cons.UserPayState.UNPAY() &&
+        (pay.state != cons.UserPayState.SUCCESS() || pay.push != cons.UserPayPush.UNPUSH())) {
+        return utils.responseError(res, '订单已完成过，不可重复提交');
+    }
 
-        sao.user.payComplete(pay.userId, pay.id, pay.money, pay.commit, (result) => {
-            if (utils.isId(userId)) {
-                let params = {};
-                params.userId = userId;
-                params.module = '充值订单';
-                params.desc = userId + '给玩家' + pay.userId + '手动充值订单号：' + pay.id + ',充值' + pay.money + '元，成功';
-                params.opname = '手动充值';
-                adminlog.external(req, params);
-                params.ext1 = pay.userId;
-                params.ext2 = userId;
-                params.ext3 = pay.money;
-                params.columns = [];
-                adminlog.logadmin(params);
-            }
-            logger.info('payComplete:' + result.code + ',' + result.msg);
-            utils.response(res, result.code, result.msg);
-        });
-    })();
+    pay.adminId = req.admin.getId();
+    pay.commit = commit || 0;
+
+    let { err } = await db.pcall('proc_user_pay_result', [pay.id, pay.money, null, 1], true);
+    if (err) {
+        return utils.responseBDError(err);
+    }
+
+    let ret = await saop.user.payComplete(pay.userId, pay.id, pay.money, pay.commit);
+    if (ret.err) {
+        return utils.responseError(res, ret.err);
+    }
+
+    pay.save();
+
+    let params = {};
+    params.userId = req.admin.getId();
+    params.module = '充值订单';
+    params.desc = req.admin.getId() + '给玩家' + pay.userId + '手动充值订单号：' + pay.id + ',充值' + pay.money + '元，成功';
+    params.opname = '手动充值';
+    adminlog.external(req, params);
+    params.ext1 = pay.userId;
+    params.ext2 = req.admin.getId();
+    params.ext3 = pay.money;
+    params.columns = [];
+    adminlog.logadmin(params);
+
+    utils.responseOK(res, ret.msg);
 });
 
 /**
