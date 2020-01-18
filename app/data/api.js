@@ -93,6 +93,8 @@ api['/api/sdk/audio'] = { session: false };
 api['/api/sdk/eth/mine'] = { session: false };
 api['/api/sdk/ofb/agent'] = { session: false };
 api['/api/sdk/ofb/user'] = { session: false };
+api['/api/sdk/zapp/item'] = { session: false };
+api['/api/sdk/zapp/item/exchange'] = { session: false };
 
 api['/api/user/achieve/children'] = { session: false };
 api['/api/user/achieve/self'] = { session: false };

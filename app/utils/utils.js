@@ -184,6 +184,19 @@ utils.response = (res, code, msg) => {
 };
 
 
+utils.responseZAPP = (res, code, message, data) => {
+    res.header("Content-Type", "application/json");
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.header("Pragma", "no-cache");
+    res.header("Expires", 0);
+    let obj = { code, message, data };
+    logger.info('RESP ZAPP', obj);
+    res.json(obj);
+    res.end();
+};
+
+
 utils.responseError = (res, msg) => {
     utils.response(res, constants.ResultCode.ERROR(), msg);
 };
