@@ -10,9 +10,11 @@ const uuid = require('uuid/v1');
 const logger = require('log4js').getLogger('common');
 const saop = require('../app/server/saop');
 
+/** ZAPP 商户ID和商户密钥 */
+const ZAPP_APPKEY = '2a49b5e58d164e65ab383c3e4bbc2d76';
+const ZAPP_APPSECRET = 'f8dbf368ed10494da016854b768ea1c0';
 
 let router = express.Router();
-
 
 /**
  * @api {get} api/sdk/zapp/item 获取用户当前道具信息
@@ -49,7 +51,11 @@ router.get('/zapp/item', async (req, res) => {
         return utils.responseZAPP(res, 'error', '参数错误', {});
     }
 
-    let appSecret = '123123';
+    if (appKey !== ZAPP_APPKEY) {
+        return utils.responseZAPP(res, 'error', 'appKey 不匹配', {});
+    }
+
+    let appSecret = ZAPP_APPSECRET;
 
     let str = utils.string.toSign({ userId, goodsCode, timestamp, nonstr });
     str += `&${appKey}=${appSecret}`;
@@ -105,7 +111,11 @@ router.route('/zapp/item/exchange').post(async (req, res) => {
         return utils.responseZAPP(res, 'error', '参数错误', {});
     }
 
-    let appSecret = '123123';
+    if (appKey !== ZAPP_APPKEY) {
+        return utils.responseZAPP(res, 'error', 'appKey 不匹配', {});
+    }
+
+    let appSecret = ZAPP_APPSECRET;
 
     let str = utils.string.toSign({ orderNo, type, userId, goodsCode, price, number, money, unitName, timestamp, nonstr });
     str += `&${appKey}=${appSecret}`;
