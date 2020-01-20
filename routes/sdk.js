@@ -48,11 +48,11 @@ router.get('/zapp/item', async (req, res) => {
         !utils.isString(timestamp) ||
         !utils.isString(nonstr) ||
         !utils.isString(sign)) {
-        return utils.responseZAPP(res, 'error', '参数错误', {});
+        return utils.responseZAPP(res, 'error', '参数错误');
     }
 
     if (appKey !== ZAPP_APPKEY) {
-        return utils.responseZAPP(res, 'error', 'appKey 不匹配', {});
+        return utils.responseZAPP(res, 'error', 'appKey 不匹配');
     }
 
     let appSecret = ZAPP_APPSECRET;
@@ -63,15 +63,20 @@ router.get('/zapp/item', async (req, res) => {
     logger.info('zapp sign check:', str, checkSign, sign);
 
     if (sign.toLocaleLowerCase() !== checkSign) {
-        return utils.responseZAPP(res, 'error', '签名不通过，签名不一致', {});
+        return utils.responseZAPP(res, 'error', '签名不通过，签名不一致');
     }
 
     let itemId = goodsCode === 'b874308ed43e39e5' ? 1 : null;
     if (!itemId) {
-        return utils.responseZAPP(res, 'error', '商品标识符不存在', {});
+        return utils.responseZAPP(res, 'error', '商品标识符不存在');
     }
 
-    let item = await model.Item.findOne({ where: { userId, itemId } });
+    let user = await model.User.findOne({ where: { account: userId } });
+    if (!user) {
+        return utils.responseZAPP(res, 'error', '用户不存在');
+    }
+
+    let item = await model.Item.findOne({ where: { userId: user.id, itemId } });
     if (!item) {
         logger.warn('zapp no item', userId, itemId);
     }
@@ -114,11 +119,11 @@ router.route('/zapp/item/exchange').post(async (req, res) => {
         !utils.isNumber(timestamp) ||
         !utils.isString(nonstr) ||
         !utils.isString(sign)) {
-        return utils.responseZAPP(res, 'error', '参数错误', {});
+        return utils.responseZAPP(res, 'error', '参数错误');
     }
 
     if (appKey !== ZAPP_APPKEY) {
-        return utils.responseZAPP(res, 'error', 'appKey 不匹配', {});
+        return utils.responseZAPP(res, 'error', 'appKey 不匹配');
     }
 
     let appSecret = ZAPP_APPSECRET;
@@ -129,29 +134,51 @@ router.route('/zapp/item/exchange').post(async (req, res) => {
     logger.info('zapp sign check:', str, checkSign, sign);
 
     if (sign.toLocaleLowerCase() !== checkSign) {
-        return utils.responseZAPP(res, 'error', '签名不通过，签名不一致', {});
+        return utils.responseZAPP(res, 'error', '签名不通过，签名不一致');
     }
 
+    let itemId = goodsCode === 'b874308ed43e39e5' ? 1 : null;
+    if (!itemId) {
+        return utils.responseZAPP(res, 'error', '商品标识符不存在');
+    }
+
+    let user = await model.User.findOne({ where: { account: userId } });
+    if (!user) {
+        return utils.responseZAPP(res, 'error', '用户不存在');
+    }
+
+    let count = 0;
+    let reason = null;
+    if (type == 0) { // 兑出，扣除捕鱼币
+        let item = await model.Item.findOne({ where: { userId: user.id, itemId } });
+        if (!item || (item.count - number < 0)) {
+            return utils.responseZAPP(res, 'error', '用户身上商品数量不足');
+        }
+        count -= number;
+        reason = cons.ItemChangeReason.TO_ETHER();
+    } else if (type == 1) { //兑入，增加捕鱼币
+        count += number;
+        reason = cons.ItemChangeReason.FROM_ETHER();
+    }
     let transactionNo = utils.string.toOrderId('Z');
+    saop.item.changeItem(user.id, itemId, count, {
+        from: transactionNo, reason
+    }).then(items => {
+        let data = {
+            transactionNo,
+            orderNo,
+            timestamp: new Date().getTime(),
+            nonstr
+        };
 
-    //TODO: 给用户加钱或者扣钱
-    // let p = saop.item.changeItem(userId, itemId, count, {
-    //     from: operateid + "",
-    //     reason, memo
-    // });
-    // utils.responseProm(res, p);
+        data.sign = utils.string.md5(utils.string.toSign(data) + `&${appKey}=${appSecret}`);
+        data.appKey = appKey;
 
-    let data = {
-        transactionNo,
-        orderNo,
-        timestamp: new Date().getTime(),
-        nonstr
-    };
-
-    data.sign = utils.string.md5(utils.string.toSign(data) + `&${appKey}=${appSecret}`);
-    data.appKey = appKey;
-
-    utils.responseZAPP(res, 'success', '请求成功', data);
+        utils.responseZAPP(res, 'success', '请求成功', data);
+    }).catch(err => {
+        logger.warn('zapp change item error:', err, userId, itemId, count);
+        return utils.responseZAPP(res, 'error', '兑换失败:' + err);
+    });
 }).options((req, res) => {
     res.set('Access-Control-Allow-Origin', '*');
     res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');

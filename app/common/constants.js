@@ -156,7 +156,7 @@ constants.ItemChangeReason = {
     ROUNDABOUT_COST: _.constant(11),
     NEW_USER: _.constant(12),
     PLAY_ROUND_COST: _.constant(13),
-    FRROM_ETHER: _.constant(14),
+    FROM_ETHER: _.constant(14),
     TO_ETHER: _.constant(15),
     RECOMMENDER_BIND: _.constant(16),
     RECOMMENDER_CHARGE: _.constant(17),

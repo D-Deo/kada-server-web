@@ -811,7 +811,8 @@ router.post('/charge/user', async (req, res) => {
     }
 
     let { id, account, itemId, count, reason, memo } = req.body;
-
+    itemId = 1;
+    
     id = parseInt(id) || null;
     if ((id && !utils.isId(id)) ||
         (account && !utils.isString(account, 6)) ||
