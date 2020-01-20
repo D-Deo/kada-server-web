@@ -96,6 +96,12 @@ router.get('/zapp/item', async (req, res) => {
 router.route('/zapp/item/exchange').post(async (req, res) => {
     let { appKey, orderNo, type, userId, goodsCode, price, number, money, unitName, timestamp, nonstr, sign } = req.body;
 
+    type = parseInt(type);
+    price = parseFloat(price);
+    number = parseFloat(number);
+    money = parseFloat(money);
+    timestamp = parseInt(timestamp);
+
     if (!utils.isString(userId) ||
         !utils.isString(appKey) ||
         !utils.isString(orderNo) ||
