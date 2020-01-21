@@ -157,6 +157,11 @@ router.route('/zapp/item/exchange').post(async (req, res) => {
         return utils.responseZAPP(res, 'success', '请求成功', data);
     }
 
+    let now = new Date().getTime();
+    if (now - timestamp >= 12 * 60 * 60 * 1000) {
+        return utils.responseZAPP(res, 'error', '消息过期:' + timestamp);
+    }
+
     let user = await model.User.findOne({ where: { account: userId } });
     if (!user) {
         return utils.responseZAPP(res, 'error', '用户不存在');
