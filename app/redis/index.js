@@ -14,6 +14,7 @@ let redis = module.exports = {};
 redis.client = Redis.createClient(opts);
 
 redis.async = {};
+redis.async.set = promisify(redis.client.set).bind(redis.client);
 redis.async.get = promisify(redis.client.get).bind(redis.client);
 redis.async.incrby = promisify(redis.client.incrby).bind(redis.client);
 redis.async.keys = promisify(redis.client.keys).bind(redis.client);

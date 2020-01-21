@@ -9,6 +9,7 @@ const utils = require('../app/utils/utils');
 const uuid = require('uuid/v1');
 const logger = require('log4js').getLogger('common');
 const saop = require('../app/server/saop');
+const redis = require('../app/redis');
 
 /** ZAPP 商户ID和商户密钥 */
 const ZAPP_APPKEY = '2a49b5e58d164e65ab383c3e4bbc2d76';
@@ -142,6 +143,20 @@ router.route('/zapp/item/exchange').post(async (req, res) => {
         return utils.responseZAPP(res, 'error', '商品标识符不存在');
     }
 
+    let key = 'ZAPP:EXCHANGE_ORDER:' + orderNo;
+    let ret = await redis.async.get(key);
+    if (ret) {
+        let data = {
+            transactionNo: ret,
+            orderNo,
+            timestamp: new Date().getTime(),
+            nonstr
+        };
+        data.sign = utils.string.md5(utils.string.toSign(data) + `&${appKey}=${appSecret}`);
+        data.appKey = appKey;
+        return utils.responseZAPP(res, 'success', '请求成功', data);
+    }
+
     let user = await model.User.findOne({ where: { account: userId } });
     if (!user) {
         return utils.responseZAPP(res, 'error', '用户不存在');
@@ -164,6 +179,9 @@ router.route('/zapp/item/exchange').post(async (req, res) => {
     saop.item.changeItem(user.id, itemId, count, {
         from: transactionNo, reason
     }).then(items => {
+        redis.set(key, transactionNo);
+        redis.expire(key, 60 * 60 * 24);
+
         let data = {
             transactionNo,
             orderNo,
