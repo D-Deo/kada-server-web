@@ -102,22 +102,20 @@ router.get('/zapp/item', async (req, res) => {
 router.route('/zapp/item/exchange').post(async (req, res) => {
     let { appKey, orderNo, type, userId, goodsCode, price, number, money, unitName, timestamp, nonstr, sign } = req.body;
 
-    type = parseInt(type);
-    price = parseFloat(price);
-    number = parseFloat(number);
-    money = parseFloat(money);
-    timestamp = parseInt(timestamp);
+    let ntype = parseInt(type);
+    let nnumber = parseFloat(number);
+    let ntimestamp = parseInt(timestamp);
 
     if (!utils.isString(userId) ||
         !utils.isString(appKey) ||
         !utils.isString(orderNo) ||
-        !utils.isNumber(type, 0, 1) ||
+        !utils.isNumber(ntype, 0, 1) ||
         !utils.isString(goodsCode) ||
-        !utils.isNumber(price) ||
-        !utils.isNumber(number) ||
-        !utils.isNumber(money) ||
+        !utils.isString(price) ||
+        !utils.isNumber(nnumber) ||
+        !utils.isString(money) ||
         !utils.isString(unitName) ||
-        !utils.isNumber(timestamp) ||
+        !utils.isNumber(ntimestamp) ||
         !utils.isString(nonstr) ||
         !utils.isString(sign)) {
         return utils.responseZAPP(res, 'error', '参数错误');
@@ -158,7 +156,7 @@ router.route('/zapp/item/exchange').post(async (req, res) => {
     }
 
     let now = new Date().getTime();
-    if (now - timestamp >= 12 * 60 * 60 * 1000) {
+    if (now - ntimestamp >= 12 * 60 * 60 * 1000) {
         return utils.responseZAPP(res, 'error', '消息过期:' + timestamp);
     }
 
@@ -169,20 +167,20 @@ router.route('/zapp/item/exchange').post(async (req, res) => {
 
     let count = 0;
     let reason = null;
-    if (type == 0) { // 兑出，扣除捕鱼币
+    if (ntype == 0) { // 兑出，扣除捕鱼币
         let item = await model.Item.findOne({ where: { userId: user.id, itemId } });
-        if (!item || (item.count - number < 0)) {
+        if (!item || (item.count - nnumber < 0)) {
             return utils.responseZAPP(res, 'error', '用户身上商品数量不足');
         }
-        count -= number;
+        count -= nnumber;
         reason = cons.ItemChangeReason.TO_ETHER();
-    } else if (type == 1) { //兑入，增加捕鱼币
-        count += number;
+    } else if (ntype == 1) { //兑入，增加捕鱼币
+        count += nnumber;
         reason = cons.ItemChangeReason.FROM_ETHER();
     }
     let transactionNo = utils.string.toOrderId('Z');
     saop.item.changeItem(user.id, itemId, count, {
-        from: transactionNo, reason
+        from: `${transactionNo}:${price}:${money}`, reason
     }).then(items => {
         redis.set(key, transactionNo);
         redis.expire(key, 60 * 60 * 24);
