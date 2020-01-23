@@ -184,7 +184,7 @@ utils.response = (res, code, msg) => {
 };
 
 
-utils.responseZAPP = (res, code, message, data) => {
+utils.responseZAPP = (res, code, message, data = {}) => {
     res.header("Content-Type", "application/json");
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Cache-Control", "no-cache, no-store, must-revalidate");

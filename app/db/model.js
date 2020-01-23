@@ -216,3 +216,20 @@ model.AdminPermission = sequelize.define('AdminPermission', {
     type: Sequelize.INTEGER,
     permissions: Sequelize.STRING
 }, { tableName: 'admin_permission' });
+
+model.ZappExchangeRecord = sequelize.define('zapp_exchange_record', {
+    id: { type: Sequelize.INTEGER, unique: true, primaryKey: true, autoIncrement: true },
+    transactionNo: Sequelize.STRING,
+    transactionType: Sequelize.INTEGER,
+    transactionNumber: Sequelize.BIGINT,
+    userId: Sequelize.INTEGER,
+    itemId: Sequelize.INTEGER,
+    openId: Sequelize.STRING,
+    orderNo: Sequelize.STRING,
+    goodsCode: Sequelize.STRING,
+    price: Sequelize.DECIMAL,
+    money: Sequelize.DECIMAL,
+    unitName: Sequelize.STRING,
+    timestamp: Sequelize.BIGINT,
+    nonstr: Sequelize.STRING,
+}, { tableName: 'zapp_exchange_record' });

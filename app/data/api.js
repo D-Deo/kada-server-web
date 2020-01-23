@@ -144,6 +144,7 @@ api['/api/user/recommend/qrcode'] = { session: false };
 api['/api/statistics/report/pay'] = { session: true };
 api['/api/statistics/ykbb'] = { session: true };
 api['/api/statistics/hybb'] = { session: true };
+api['/api/statistics/ykbb_zapp'] = { session: false };
 api['/api/statistics/ykbb_compute'] = { session: false };
 api['/api/statistics/rebate_compute'] = { session: false };
 

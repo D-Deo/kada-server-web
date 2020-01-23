@@ -110,6 +110,66 @@ router.get('/ykbb', (req, res) => {
 });
 
 /**
+ * @api {get} api/statistics/ykbb/zapp 盈亏报表（ZAPP）
+ * @class statistics
+ * @param {number} agentId 代理id
+ * @param {number} from 起始时间
+ * @param {number} to 结束时间
+ * @param {number} pindex 页索引 0开始
+ * @param {number} psize 页大小
+ * @apiSuccessExample 返回
+ * {
+ *     "count": 1, 总数，
+ *     "rows": [ 数据集 ]
+ * }
+ */
+router.get('/ykbb/zapp', (req, res) => {
+    let pindex = parseInt(req.query.pindex);
+    let psize = parseInt(req.query.psize);
+    let from = req.query.from;
+    let to = req.query.to;
+
+    if (!utils.isNumber(pindex, 0) ||
+        !utils.isNumber(psize, 0)) {
+        utils.responseError(res);
+        return;
+    }
+
+    from = utils.isDate(from) ? (from) : null;
+    to = utils.isDate(to) ? (to) : null;
+    if (/^\d{4}\-\d{1,2}\-\d{1,2}$/img.test(from)) {
+        //from = from + ' 00:00:00';
+    }
+    if (/^\d{4}\-\d{1,2}\-\d{1,2}$/img.test(to)) {
+        //to = to + ' 23:59:59.999';
+    }
+
+    db.call('proc_ykbb_zapp', [from, to, pindex, psize], true, (err, result) => {
+        if (err) {
+            utils.responseError(res);
+            return;
+        }
+
+        let data = {};
+        // result[0] 新增用户 [1] 游戏用户 [2] 兑入 [3] 兑出
+        for (let i = 0; i < result.length; i++) {
+            let ret = result[i];
+            for (let r of ret) {
+                let o = data[ret.dateTime] = data[ret.dateTime] || {};
+                if (i == 0) {
+                    o.newPlayers = ret.count;
+                }
+            }
+        }
+
+        // let data = result[0];
+        // let total = result[1][0];
+        //let today = result[2][0];
+        utils.responseOK(res, { data, total });
+    });
+});
+
+/**
  * @api {get} statistics/jrbb 今日盈亏报表
  * @class statistics
  * @param {number} agentId 代理id

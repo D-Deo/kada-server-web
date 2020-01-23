@@ -152,7 +152,7 @@ router.route('/zapp/item/exchange').post(async (req, res) => {
         };
         data.sign = utils.string.md5(utils.string.toSign(data) + `&${appKey}=${appSecret}`);
         data.appKey = appKey;
-        return utils.responseZAPP(res, 'success', '请求成功', data);
+        return utils.responseZAPP(res, 'success', '请求成功（幂等）', data);
     }
 
     let now = new Date().getTime();
@@ -178,9 +178,26 @@ router.route('/zapp/item/exchange').post(async (req, res) => {
         count += nnumber;
         reason = cons.ItemChangeReason.FROM_ETHER();
     }
+
     let transactionNo = utils.string.toOrderId('Z');
+    model.ZappExchangeRecord.create({
+        transactionNo,
+        transactionType: type,
+        transactionNumber: number,
+        userId: user.id,
+        itemId,
+        openId: userId,
+        orderNo,
+        goodsCode,
+        price,
+        money,
+        unitName,
+        timestamp,
+        nonstr
+    });
+
     saop.item.changeItem(user.id, itemId, count, {
-        from: `${transactionNo}:${price}:${money}`, reason
+        from: transactionNo, reason
     }).then(items => {
         redis.set(key, transactionNo);
         redis.expire(key, 60 * 60 * 24);
