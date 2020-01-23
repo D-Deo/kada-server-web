@@ -150,22 +150,44 @@ router.get('/ykbb/zapp', (req, res) => {
             return;
         }
 
-        let data = {};
+        let obj = {};
         // result[0] 新增用户 [1] 游戏用户 [2] 兑入 [3] 兑出
         for (let i = 0; i < result.length; i++) {
             let ret = result[i];
-            for (let r of ret) {
-                let o = data[ret.dateTime] = data[ret.dateTime] || {};
+            for (let rk in ret) {
+                let r = ret[rk];
+                let o = obj[r.dateTime] = obj[r.dateTime] || {};
                 if (i == 0) {
-                    o.newPlayers = ret.count;
+                    o.newPlayers = o.newPlayers || 0;
+                    o.newPlayers += r.count || 0;
+                } else if (i == 1) {
+                    o.gamePlayers = o.gamePlayers || 0;
+                    o.gamePlayers = r.count || 0;
+                } else if (i == 2) {
+                    o.qcInMoney = o.qcInMoney || 0;
+                    o.qcInMoney += r.money;
+                    o.qcInCount = o.qcInCount || 0;
+                    o.qcInCount += r.count;
+                    o.qcInUser = o.qcInUser || 0;
+                    o.qcInUser += r.userId ? 1 : 0;
+                } else if (i == 3) {
+                    o.qcOutMoney = o.qcOutMoney || 0;
+                    o.qcOutMoney += r.money;
+                    o.qcOutCount = o.qcOutCount || 0;
+                    o.qcOutCount += r.count;
+                    o.qcOutUser = o.qcOutUser || 0;
+                    o.qcOutUser += r.userId ? 1 : 0;
                 }
             }
         }
 
-        // let data = result[0];
-        // let total = result[1][0];
-        //let today = result[2][0];
-        utils.responseOK(res, { data, total });
+        let data = [];
+        for (let key in obj) {
+            obj[key].dateTime = key;
+            data.push(obj[key]);
+        }
+
+        utils.responseOK(res, { data, total: data.length });
     });
 });
 
