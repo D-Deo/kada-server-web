@@ -165,14 +165,14 @@ router.get('/ykbb/zapp', (req, res) => {
                     o.gamePlayers = r.count || 0;
                 } else if (i == 2) {
                     o.qcInMoney = o.qcInMoney || 0;
-                    o.qcInMoney += r.money;
+                    o.qcInMoney += new Number(r.money);
                     o.qcInCount = o.qcInCount || 0;
                     o.qcInCount += r.count;
                     o.qcInUser = o.qcInUser || 0;
                     o.qcInUser += r.userId ? 1 : 0;
                 } else if (i == 3) {
                     o.qcOutMoney = o.qcOutMoney || 0;
-                    o.qcOutMoney += r.money;
+                    o.qcOutMoney += new Number(r.money);
                     o.qcOutCount = o.qcOutCount || 0;
                     o.qcOutCount += r.count;
                     o.qcOutUser = o.qcOutUser || 0;
