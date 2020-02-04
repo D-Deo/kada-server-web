@@ -944,8 +944,8 @@ router.post('/withdraw/memo', (req, res) => {
 });
 
 /**
- * @api {get} /finace/item/records 资产变化记录
- * @class ether
+ * @api {post} api/finace/item/records 资产变化记录
+ * @class finace
  * @param {number} userId 玩家id
  * @param {number} state 状态
  * @param {number} pindex 页索引 0开始

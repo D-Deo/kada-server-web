@@ -151,12 +151,15 @@ router.get('/ykbb/zapp', (req, res) => {
         }
 
         let obj = {};
-        // result[0] 新增用户 [1] 游戏用户 [2] 兑入 [3] 兑出
+        // result[0] 新增用户 [1] 游戏用户 [2] 兑入 [3] 兑出 [4] 登录用户 [5] 次日留存 [6] 金币流水 [7] 金币税收 [8] 金币存款
         for (let i = 0; i < result.length; i++) {
             let ret = result[i];
+            let total = 0;
             for (let rk in ret) {
                 let r = ret[rk];
+                if (!r.dateTime) continue;
                 let o = obj[r.dateTime] = obj[r.dateTime] || {};
+                total += Number(r.count) || 0;
                 if (i == 0) {
                     o.newPlayers = o.newPlayers || 0;
                     o.newPlayers += r.count || 0;
@@ -177,6 +180,21 @@ router.get('/ykbb/zapp', (req, res) => {
                     o.qcOutCount += r.count;
                     o.qcOutUser = o.qcOutUser || 0;
                     o.qcOutUser += r.userId ? 1 : 0;
+                } else if (i == 4) {
+                    o.loginPlayers = o.loginPlayers || 0;
+                    o.loginPlayers += r.count || 0;
+                } else if (i == 5) {
+                    o.nextPlayers = o.nextPlayers || 0;
+                    o.nextPlayers = r.count || 0;
+                } else if (i == 6) {
+                    o.goldCost = o.goldCost || 0;
+                    o.goldCost = r.count || 0;
+                } else if (i == 7) {
+                    o.goldTex = o.goldTex || 0;
+                    o.goldTex = r.count || 0;
+                } else if (i == 8) {
+                    o.goldTotal = o.goldTotal || 0;
+                    o.goldTotal = total || 0;
                 }
             }
         }
