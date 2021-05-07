@@ -43,7 +43,7 @@
     "socket.io": "^2.1.1",
     "speakeasy": "^2.0.0",
     "thirty-two": "^1.0.2",
-    "underscore": "^1.8.3",
+    "underscore": "^1.12.1",
     "utility": "^1.14.0",
     "uuid": "^3.2.1",
     "websocket": "^1.0.26",
