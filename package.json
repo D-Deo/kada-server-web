@@ -47,7 +47,7 @@
     "utility": "^1.14.0",
     "uuid": "^3.2.1",
     "websocket": "^1.0.26",
-    "xlsx": "^0.14.1"
+    "xlsx": "^0.17.0"
   },
   "apidoc": {
     "name": "Web服务器",
