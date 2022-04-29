@@ -7,7 +7,7 @@
     "statistics.agent.daily": "node ./app/statistics/agent/daily"
   },
   "dependencies": {
-    "async": "^2.5.0",
+    "async": "^2.6.4",
     "body-parser": "~1.16.0",
     "captchapng": "0.0.1",
     "ccap": "^0.6.10",
